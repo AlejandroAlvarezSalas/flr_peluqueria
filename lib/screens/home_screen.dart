@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pelucapp/screens/screens.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:pelucapp/widgets/widgets.dart';
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _pages = <Widget>[
     CitaScreen(),
-    MisReservasScreen(),
+    //MisReservasScreen(),
     call_screen(),
     EditarPerfilScreen(),
   ];
@@ -42,23 +43,76 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           actions: [
-            Padding(
+            Builder(
+              builder: (context) => Padding(
                 padding: const EdgeInsets.only(
-                    left: 8, top: 8, bottom: 8, right: 35),
-                child: GestureDetector(
-                    onTap: () {},
-                    child: IconButton(
+                  left: 8,
+                  top: 8,
+                  bottom: 8,
+                  right: 35,
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
                       onPressed: () {
                         Navigator.pushNamed(context, 'notificaciones');
                       },
                       color: AppTheme.primary,
-                      icon: Icon(Icons.notifications_sharp),
-                    )))
+                      icon: const Icon(Icons.notifications_sharp),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                      child: const Icon(
+                        Icons.menu,
+                        color: AppTheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
         body: IndexedStack(
           index: _selectedIndex,
           children: _pages,
+        ),
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: AppTheme.primary,
+                ),
+                child: Text(
+                  'Gestión',
+                  style: TextStyle(
+                    color: AppTheme.secondaryTextColor,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+              ListTile(
+                title: const Text('Peluqueros'),
+                onTap: () {
+                  Navigator.pushNamed(context, 'gestionPeluqueros');
+                },
+              ),
+              ListTile(
+                title: const Text('Item 2'),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.all(12),

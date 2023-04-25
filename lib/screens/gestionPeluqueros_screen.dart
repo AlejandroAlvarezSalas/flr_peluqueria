@@ -5,8 +5,8 @@ import 'package:pelucapp/theme/app_theme.dart';
 import 'package:pelucapp/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class PeluquerosScreen extends StatelessWidget {
-  const PeluquerosScreen({
+class GestionPeluquerosScreen extends StatelessWidget {
+  const GestionPeluquerosScreen({
     super.key,
   });
 
@@ -19,56 +19,53 @@ class PeluquerosScreen extends StatelessWidget {
     PageController pageController = PageController(viewportFraction: 0.75);
 
     List<Peluquero> peluqueros =
-        getPeluqueros(peluqueriasServices.peluqueriaSeleccionada!);
+        getPeluquerosGestion(peluqueriasServices.peluquerias);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios_new, color: AppTheme.mainTextColor),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios_new, color: AppTheme.mainTextColor),
+          ),
+          title: BigText(
+            text: 'PELUCAPP',
+            color: AppTheme.primary,
+            size: 25,
+          ),
         ),
-        title: BigText(
-          text: 'PELUCAPP',
-          color: AppTheme.primary,
-          size: 25,
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: SmallText(
-              text: 'Elige tu pelquero favorito',
-              color: AppTheme.mainTextColor,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: SmallText(
+                text: 'Listado de peluqueros',
+                color: AppTheme.mainTextColor,
+              ),
             ),
-          ),
-          Container(
-            height: 450,
-            child: PageView.builder(
-                controller: pageController,
-                itemCount: peluqueros.length,
-                itemBuilder: (context, index) {
-                  Peluquero peluquero = peluqueros[index];
-                  return _buildPeluquerosCard(peluquero, peluquerosServices,
-                      serviciosServices, context);
-                }),
-          ),
-        ],
-      ),
-    );
+            Container(
+              height: 450,
+              child: PageView.builder(
+                  controller: pageController,
+                  itemCount: peluqueros.length,
+                  itemBuilder: (context, index) {
+                    Peluquero peluquero = peluqueros[index];
+                    return _buildPeluquerosCard(peluquero, peluquerosServices,
+                        serviciosServices, context);
+                  }),
+            ),
+          ],
+        ));
   }
 }
 
-List<Peluquero> getPeluqueros(Peluqueria peluqueria) {
+List<Peluquero> getPeluquerosGestion(List<Peluqueria> peluquerias) {
   List<Peluquero> peluqueros = [];
-  peluqueria.peluqueros.forEach((key, value) {
-    final tempPeluquero = value;
-    tempPeluquero.id = key;
-    if (!value.borrado) {
-      peluqueros.add(tempPeluquero);
-    }
+  peluquerias.forEach((Peluqueria peluqueria) {
+    peluqueria.peluqueros.forEach((key, value) {
+      peluqueros.add(value);
+    });
   });
   return peluqueros;
 }
@@ -132,12 +129,12 @@ Widget _buildPeluquerosCard(
                   margin: EdgeInsets.only(bottom: 5),
                   child: IconButton(
                     iconSize: 40,
-                    icon: const Icon(Icons.check_circle),
+                    icon: const Icon(Icons.edit_note_outlined),
                     alignment: Alignment.bottomRight,
                     onPressed: () {
                       peluquerosServices.peluqueroSeleccionado = peluquero;
                       serviciosServices.deleteServiciosSeleccionados(peluquero);
-                      Navigator.pushNamed(context, 'servicios');
+                      Navigator.pushNamed(context, 'editarPeluquero');
                     },
                     color: AppTheme.primary,
                   ),

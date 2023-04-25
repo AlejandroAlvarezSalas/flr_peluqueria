@@ -93,9 +93,12 @@ class _FormLogIn extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: ElevatedButton(
             onPressed: () {
+              print('Activo');
               FocusScope.of(context).requestFocus(FocusNode());
               // Primero tengo que recorrer el array de usuarios que me da el usuariosServices
               for (int i = 0; i < usuariosServices.usuarios.length; i++) {
+                print(
+                    'Recorro usuarios con una longitud de ${usuariosServices.usuarios.length}');
                 // Por cada item, le asigno sus valores a usuario y comparo con los datos introducidos en el formulario
                 usuario = usuariosServices.usuarios[i];
                 if (usuario.email == formValues['email'] &&

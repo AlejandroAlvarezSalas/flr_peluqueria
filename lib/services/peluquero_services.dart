@@ -11,6 +11,7 @@ class PeluquerosServices extends ChangeNotifier {
   Peluquero? peluqueroSeleccionado;
 
   bool isLoading = true;
+  bool isSaving = false;
 
   PeluquerosServices() {
     this.loadPeluqueros();
@@ -27,5 +28,49 @@ class PeluquerosServices extends ChangeNotifier {
       tempPeluquero.id = key;
       peluqueros.add(tempPeluquero);
     });
+  }
+
+  Future<String> crearPeluquero(Peluquero peluquero) async {
+    // Conectamos a la base de datos
+    final url = Uri.https(_baseURL, 'usuarios.json');
+    // Queremos meter nuevo usuario, cambiamos el http.get a post
+    final resp = await http.post(url, body: peluquero.toJson());
+    // Para que Firebase cree un ID del usuario automaticamente
+    //final decodedData = json.decode(resp.body);
+    //usuario.id = decodedData['nombre'];
+
+    // ID con nuestro formato:
+    int tamano = peluqueros.length + 2;
+    peluquero.id = "USR00" + tamano.toString();
+
+    this.peluqueros.add(peluquero);
+
+    return peluquero.id!;
+  }
+
+  Future<String> updatePeluquero(Peluquero peluquero) async {
+    final url = Uri.https(_baseURL, 'peluqueros/${peluquero.id}.json');
+    final resp = await http.put(url, body: peluquero.toJson());
+    final decodedData = resp.body;
+
+    return peluquero.id!;
+  }
+
+  Future guardarOCrearPeluquero(Peluquero peluquero) async {
+    isSaving = true;
+    notifyListeners();
+    print(peluquero.id);
+    if (peluquero.id == null) {
+      // Crear
+      await this.crearPeluquero(peluquero);
+      print('creando');
+    } else {
+      // Actualizar
+      await this.updatePeluquero(peluquero);
+      print('updateando');
+    }
+
+    isSaving = false;
+    notifyListeners();
   }
 }

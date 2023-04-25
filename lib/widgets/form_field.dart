@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class FormFieldPers extends StatelessWidget {
+class FormFieldPers extends StatefulWidget {
   final String? hintText;
   final IconData? icon;
   final bool ocultar;
   final TextInputType? keyboardType;
   final String? value;
+  final bool hideable;
 
   final String formProperty;
   final Map<String, String> formValues;
 
-  // Constructor del FormFieldRegi
   const FormFieldPers({
     Key? key,
     this.hintText,
@@ -19,19 +19,32 @@ class FormFieldPers extends StatelessWidget {
     required this.formProperty,
     required this.formValues,
     this.keyboardType,
-    this.value
+    this.value,
+    this.hideable = false,
   }) : super(key: key);
+
+  @override
+  _FormFieldPersState createState() => _FormFieldPersState();
+}
+
+class _FormFieldPersState extends State<FormFieldPers> {
+  late bool _verpassword;
+
+  @override
+  void initState() {
+    super.initState();
+    _verpassword = true;
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autofocus: false,
-      obscureText: ocultar,
-      keyboardType: keyboardType,
-      initialValue: value ?? "",
-      onChanged: (value) => formValues[formProperty] = value,
+      obscureText: widget.hideable ?? false ? _verpassword : widget.ocultar,
+      keyboardType: widget.keyboardType,
+      initialValue: widget.value ?? "",
+      onChanged: (value) => widget.formValues[widget.formProperty] = value,
       validator: (value) {
-        // validacion para el form. DEFINIR
         if (value!.isEmpty) {
           return 'No puede quedar vacío';
         }
@@ -41,8 +54,19 @@ class FormFieldPers extends StatelessWidget {
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
-        hintText: hintText,
-        suffixIcon: Icon(icon),
+        hintText: widget.hintText,
+        suffixIcon: widget.hideable
+            ? IconButton(
+                icon: Icon(
+                  _verpassword ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _verpassword = !_verpassword;
+                  });
+                },
+              )
+            : Icon(widget.icon),
       ),
     );
   }

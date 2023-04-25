@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pelucapp/models/models.dart';
 import 'package:pelucapp/providers/usuario_form_provider.dart';
 import 'package:pelucapp/services/services.dart';
@@ -45,6 +47,9 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
   final UsuariosServices usuariosServices;
 
   _RegisterScreenState(this.usuariosServices);
+
+  bool _verpassword = true;
+  bool _verpasswordconfig = true;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
             value: formValues['telefono'],
             ocultar: false,
             keyboardType: TextInputType.number,
-            hintText: '111 222 333',
+            hintText: 'Teléfono',
             icon: Icons.phone_android_outlined,
             formProperty: 'telefono',
             formValues: formValues,
@@ -117,14 +122,14 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
           const SizedBox(width: 20, height: 20),
           */
           ToggleSwitch(
-            minWidth: 90.0,
+            minWidth: 100.0,
             initialLabelIndex: 1,
             cornerRadius: 20.0,
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey,
             inactiveFgColor: Colors.white,
             totalSwitches: 2,
-            labels: ['Male', 'Female'],
+            labels: ['Hombre', 'Mujer'],
             icons: [Icons.male, Icons.female],
             activeBgColors: [
               [Colors.blue],
@@ -147,6 +152,7 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
             icon: Icons.key,
             formProperty: 'password',
             formValues: formValues,
+            hideable: true,
           ),
           const SizedBox(width: 20, height: 20),
           FormFieldPers(
@@ -157,6 +163,7 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
             icon: Icons.key,
             formProperty: 'confirmacion',
             formValues: formValues,
+            hideable: true,
           ),
           /*
           CheckboxListTile(
@@ -174,13 +181,39 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
           const SizedBox(height: 20),
           CheckboxListTile(
             controlAffinity: ListTileControlAffinity.leading,
-            title: const Text(
-                'He leido y acepto los términos y condiciones de uso'),
+            title: Text.rich(
+              TextSpan(
+                //text: 'Click here to visit ',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: 'He leido',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.blue,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.pushNamed(context, 'privacidad');
+                      },
+                  ),
+                  TextSpan(
+                    text: ' y acepto los términos y condiciones de uso',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ) /*const Text(
+                'He leido y acepto los términos y condiciones de uso')*/
+            ,
             value: _termChecked,
             onChanged: (value) {
               setState(() {
                 _termChecked = value!;
-                Navigator.pushNamed(context, 'privacidad');
+                //Navigator.pushNamed(context, 'privacidad');
               });
             },
           ),

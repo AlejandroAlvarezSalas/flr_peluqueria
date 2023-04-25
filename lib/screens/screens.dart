@@ -19,3 +19,5 @@ export 'package:pelucapp/screens/loading_screen.dart';
 export 'package:pelucapp/screens/metodos_de_pago_screen.dart';
 export 'package:pelucapp/screens/pasarela_de_pago.dart';
 export 'package:pelucapp/screens/privacidad.dart';
+export 'package:pelucapp/screens/gestionPeluqueros_screen.dart';
+export 'package:pelucapp/screens/editarPeluquero_screen.dart';
