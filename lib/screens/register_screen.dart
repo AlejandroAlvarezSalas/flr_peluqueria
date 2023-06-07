@@ -34,6 +34,7 @@ class RegisterScreenBody extends StatefulWidget {
 
 //bool _checkedP = false;
 bool _termChecked = false;
+int _checkboxValue = 0;
 final Map<String, String> formValues = {
   'nombreusuario': '',
   'telefono': '',
@@ -123,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
           */
           ToggleSwitch(
             minWidth: 100.0,
-            initialLabelIndex: 1,
+            initialLabelIndex: _checkboxValue,
             cornerRadius: 20.0,
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey,
@@ -137,8 +138,10 @@ class _RegisterScreenState extends State<RegisterScreenBody> {
             ],
             onToggle: (index) {
               if (index == 0) {
+                _checkboxValue = index ?? 0;
                 formValues['genero'] = 'hombre';
               } else {
+                _checkboxValue = index ?? 1;
                 formValues['genero'] = 'mujer';
               }
             },

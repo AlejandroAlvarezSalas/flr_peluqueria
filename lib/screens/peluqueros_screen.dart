@@ -18,8 +18,8 @@ class PeluquerosScreen extends StatelessWidget {
 
     PageController pageController = PageController(viewportFraction: 0.75);
 
-    List<Peluquero> peluqueros =
-        getPeluqueros(peluqueriasServices.peluqueriaSeleccionada!);
+    List<Peluquero> peluqueros = peluquerosServices.peluqueros;
+    /*getPeluqueros(peluqueriasServices.peluqueriaSeleccionada!)*/;
 
     return Scaffold(
       appBar: AppBar(

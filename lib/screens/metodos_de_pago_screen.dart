@@ -38,7 +38,15 @@ class MetodosDePagoScreen extends StatelessWidget {
         peluqueria: resumen.peluqueria.nif!,
         servicios: hacerMapaDeServicios(resumen.servicios),
         usuario: usuario.id!);
-
+    if (reservaServices.reservaSeleccionada!.id != null) {
+      reserva.id = reservaServices.reservaSeleccionada!.id;
+      if (reserva.peluquero != reservaServices.reservaSeleccionada!.peluquero) {
+        reservaServices.reservas.remove(reservaServices.reservaSeleccionada);
+      }
+    }
+    if (reservaServices.desdePeluquero) {
+      reserva.usuario = reservaServices.datosUsuario;
+    }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -68,7 +76,7 @@ class MetodosDePagoScreen extends StatelessWidget {
                   onTap: () {
                     showDialog(
                         context: context,
-                        barrierDismissible: false,
+                        barrierDismissible: true /*false*/,
                         builder: (BuildContext context) => AlertDialog(
                               title: const Text('Código de operación'),
                               content: Text(generarCodigo(resumen)),
@@ -78,10 +86,13 @@ class MetodosDePagoScreen extends StatelessWidget {
                                     reserva.pago = "Bizum";
                                     reserva.codigoBizum =
                                         generarCodigo(resumen);
-
-                                    reservaServices.create(reserva);
-                                    reservaServices.reservas.add(reserva);
-                                    Navigator.pushNamed(context, 'home');
+                                    if (reservaServices.desdePeluquero)
+                                      reserva.telefonica = true;
+                                    reservaServices
+                                        .guardarOCrearUsuario(reserva);
+                                    reservaServices.desdePeluquero = false;
+                                    Navigator.pushNamed(
+                                        context, 'pantallaIntermedia');
                                   },
                                   child: const Text('OK'),
                                 ),
@@ -124,7 +135,7 @@ class MetodosDePagoScreen extends StatelessWidget {
                   onTap: () {
                     showDialog(
                         context: context,
-                        barrierDismissible: false,
+                        barrierDismissible: true /*false*/,
                         builder: (BuildContext context) => AlertDialog(
                               title: const Text('Advertencia'),
                               content:
@@ -133,9 +144,13 @@ class MetodosDePagoScreen extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {
                                     reserva.pago = "Efectivo";
-                                    reservaServices.create(reserva);
-                                    reservaServices.reservas.add(reserva);
-                                    Navigator.pushNamed(context, 'home');
+                                    if (reservaServices.desdePeluquero)
+                                      reserva.telefonica = true;
+                                    reservaServices
+                                        .guardarOCrearUsuario(reserva);
+                                    reservaServices.desdePeluquero = false;
+                                    Navigator.pushNamed(
+                                        context, 'pantallaIntermedia');
                                     //seleccionado = true;
                                   },
                                   child: const Text('OK'),

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pelucapp/screens/screens.dart';
+import 'package:pelucapp/services/gerentes_services.dart';
+import 'package:pelucapp/services/services.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:pelucapp/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+
+import '../services/peluquerias_services.dart';
 
 void main() => runApp(const HomeScreen());
 
@@ -16,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _pages = <Widget>[
     CitaScreen(),
-    //MisReservasScreen(),
+    MisReservasScreen(),
     call_screen(),
     EditarPerfilScreen(),
   ];
@@ -29,6 +35,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final GerentesServices gerentesServices =
+        Provider.of<GerentesServices>(context);
+    final PeluquerosServices peluqueroServices =
+        Provider.of<PeluquerosServices>(context);
+    final UsuariosServices usuariosServices =
+        Provider.of<UsuariosServices>(context);
+
+    checkPeluquero() {
+      for (var pel in peluqueroServices.peluqueros) {
+        if (pel.telefono == usuariosServices.usuarioLogin!.telefono)
+          return true;
+      }
+      return false;
+    }
+
+    checkGerente() {
+      for (var ger in gerentesServices.gerentes) {
+        print(ger.telefono);
+        print(usuariosServices.usuarioLogin!.telefono);
+        if (ger.telefono == usuariosServices.usuarioLogin!.telefono)
+          return true;
+      }
+      return false;
+    }
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
@@ -96,17 +127,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              if (checkGerente())
+                ListTile(
+                  title: const Text('Peluqueros'),
+                  onTap: () {
+                    Navigator.pushNamed(context, 'gestionPeluqueros');
+                  },
+                ),
+              if (checkGerente())
+                ListTile(
+                  title: const Text('Novedades'),
+                  onTap: () {
+                    // Update the state of the app
+                    print('novedades');
+                    Navigator.pushNamed(context, 'gestionNovedades');
+                    // Then close the drawer
+                  },
+                ),
+              if (checkGerente())
+                ListTile(
+                  title: const Text('Servicios'),
+                  onTap: () {
+                    // Update the state of the app
+                    Navigator.pushNamed(context, 'gestionServicios');
+                    // Then close the drawer
+                  },
+                ),
+              if (checkPeluquero())
+                ListTile(
+                  title: const Text('Mis citas'),
+                  onTap: () {
+                    // Update the state of the app
+                    Navigator.pushNamed(context, 'reservasPeluquero');
+                    // Then close the drawer
+                  },
+                ),
               ListTile(
-                title: const Text('Peluqueros'),
-                onTap: () {
-                  Navigator.pushNamed(context, 'gestionPeluqueros');
-                },
-              ),
-              ListTile(
-                title: const Text('Item 2'),
+                title: const Text('Cerrar App'),
                 onTap: () {
                   // Update the state of the app
-                  // ...
+                  SystemNavigator.pop();
                   // Then close the drawer
                   Navigator.pop(context);
                 },

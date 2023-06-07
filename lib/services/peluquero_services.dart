@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class PeluquerosServices extends ChangeNotifier {
   final String _baseURL =
-      "peluqueria-f52fb-default-rtdb.europe-west1.firebasedatabase.app";
+      "recuperacion-flutter-93b2a-default-rtdb.europe-west1.firebasedatabase.app";
   final List<Peluquero> peluqueros = [];
   Peluquero? peluqueroSeleccionado;
 
@@ -32,7 +32,7 @@ class PeluquerosServices extends ChangeNotifier {
 
   Future<String> crearPeluquero(Peluquero peluquero) async {
     // Conectamos a la base de datos
-    final url = Uri.https(_baseURL, 'usuarios.json');
+    final url = Uri.https(_baseURL, 'peluqueros.json');
     // Queremos meter nuevo usuario, cambiamos el http.get a post
     final resp = await http.post(url, body: peluquero.toJson());
     // Para que Firebase cree un ID del usuario automaticamente
@@ -41,7 +41,7 @@ class PeluquerosServices extends ChangeNotifier {
 
     // ID con nuestro formato:
     int tamano = peluqueros.length + 2;
-    peluquero.id = "USR00" + tamano.toString();
+    peluquero.id = "PEL00" + tamano.toString();
 
     this.peluqueros.add(peluquero);
 

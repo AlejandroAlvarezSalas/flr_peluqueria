@@ -109,9 +109,10 @@ class PasarelaDePagoScreen extends StatelessWidget {
                   return;
                 } else {
                   reserva.pago = "Tarjeta";
-                  reservaServices.create(reserva);
-                  reservaServices.reservas.add(reserva);
-                  Navigator.pushNamed(context, 'home');
+                  if (reservaServices.desdePeluquero) reserva.telefonica = true;
+                  reservaServices.guardarOCrearUsuario(reserva);
+                  reservaServices.desdePeluquero = false;
+                  Navigator.pushNamed(context, 'pantallaIntermedia');
                 }
               },
               child: const Text('Pagar', style: TextStyle(fontSize: 20)),

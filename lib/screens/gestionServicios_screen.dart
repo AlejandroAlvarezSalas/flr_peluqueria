@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:pelucapp/models/models.dart';
+import 'package:pelucapp/services/novedades_services.dart';
 import 'package:pelucapp/services/services.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:pelucapp/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class GestionPeluquerosScreen extends StatelessWidget {
-  const GestionPeluquerosScreen({
+class GestionServiciosScreen extends StatelessWidget {
+  const GestionServiciosScreen({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final peluqueriasServices = Provider.of<PeluqueriasServices>(context);
-    final peluquerosServices = Provider.of<PeluquerosServices>(context);
-    final serviciosServices = Provider.of<ServiciosServices>(context);
+    final ServiciosServices serviciosServices =
+        Provider.of<ServiciosServices>(context);
 
     PageController pageController = PageController(viewportFraction: 0.75);
 
-    List<Peluquero> peluqueros = peluquerosServices.peluqueros;
+    List<Servicio> servicios = serviciosServices.servicios;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +39,7 @@ class GestionPeluquerosScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: SmallText(
-              text: 'Listado de peluqueros',
+              text: 'Listado de novedades',
               color: AppTheme.mainTextColor,
             ),
           ),
@@ -47,11 +47,11 @@ class GestionPeluquerosScreen extends StatelessWidget {
             height: 450,
             child: PageView.builder(
                 controller: pageController,
-                itemCount: peluqueros.length,
+                itemCount: servicios.length,
                 itemBuilder: (context, index) {
-                  Peluquero peluquero = peluqueros[index];
-                  return _buildPeluquerosCard(peluquero, peluquerosServices,
-                      serviciosServices, context);
+                  Servicio servicio = servicios[index];
+                  return _buildPeluquerosCard(
+                      servicio, serviciosServices, context);
                 }),
           ),
           const SizedBox(height: 80),
@@ -76,11 +76,11 @@ class GestionPeluquerosScreen extends StatelessWidget {
                     Navigator.pushNamed(context, 'home');
                   },*/
                   () {
-                peluquerosServices.peluqueroSeleccionado = null;
-                Navigator.pushNamed(context, 'editarPeluquero');
+                serviciosServices.servicioSeleccionado = null;
+                Navigator.pushNamed(context, 'editarServicios');
               },
-              child: const Text('Añadir peluquero',
-                  style: TextStyle(fontSize: 30)),
+              child:
+                  const Text('Añadir novedad', style: TextStyle(fontSize: 30)),
             ),
           ),
         ],
@@ -100,10 +100,7 @@ List<Peluquero> getPeluquerosGestion(List<Peluqueria> peluquerias) {
 }*/
 
 Widget _buildPeluquerosCard(
-    Peluquero peluquero,
-    PeluquerosServices peluquerosServices,
-    ServiciosServices serviciosServices,
-    context) {
+    Servicio servicio, ServiciosServices serviciosServices, context) {
   return Stack(
     children: [
       Align(
@@ -126,31 +123,67 @@ Widget _buildPeluquerosCard(
             padding: EdgeInsets.only(left: 15, right: 15),
             width: 290,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 90,
-                ),
-                BigText(
-                  text: peluquero.nombre,
-                  color: AppTheme.mainTextColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                BigText(
-                    text: 'Servicios disponibles:',
-                    color: AppTheme.mainTextColor,
-                    size: 20),
-                const SizedBox(
-                  height: 10,
-                ),
-                SmallText(
-                    text: _peluqueroServiciosToString(peluquero),
-                    color: Colors.black45),
-                const SizedBox(
-                  height: 10,
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 90,
+                      ),
+                      BigText(
+                        text: servicio.nombre,
+                        color: AppTheme.mainTextColor,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      BigText(
+                          text: 'Descripción:',
+                          color: AppTheme.mainTextColor,
+                          size: 20),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SmallText(
+                        text: servicio.descripcion,
+                        color: Colors.black45,
+                        size: 15,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      BigText(
+                          text: 'Tiempo:',
+                          color: AppTheme.mainTextColor,
+                          size: 20),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SmallText(
+                          text: servicio.tiempo.toString(),
+                          color: Colors.black45,
+                          size: 15),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      BigText(
+                          text: 'Precio:',
+                          color: AppTheme.mainTextColor,
+                          size: 20),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SmallText(
+                          text: servicio.precio.toString(),
+                          color: Colors.black45,
+                          size: 15),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(
                     child: Container(
@@ -161,9 +194,8 @@ Widget _buildPeluquerosCard(
                     icon: const Icon(Icons.edit_note_outlined),
                     alignment: Alignment.bottomRight,
                     onPressed: () {
-                      peluquerosServices.peluqueroSeleccionado = peluquero;
-                      serviciosServices.deleteServiciosSeleccionados(peluquero);
-                      Navigator.pushNamed(context, 'editarPeluquero');
+                      serviciosServices.servicioSeleccionado = servicio;
+                      Navigator.pushNamed(context, 'editarServicios');
                     },
                     color: AppTheme.primary,
                   ),
@@ -175,25 +207,16 @@ Widget _buildPeluquerosCard(
       ),
       Align(
         alignment: Alignment.topCenter,
-        child: peluquero.imagen == null
+        child: servicio.imagen == null
             ? CircleAvatar(
                 maxRadius: 80,
-                backgroundImage: AssetImage('assets/salon.jpg'),
+                //backgroundImage: AssetImage('asset/no-image.jpg'),
               )
             : CircleAvatar(
                 maxRadius: 80,
-                backgroundImage: NetworkImage(peluquero.imagen!),
+                backgroundImage: NetworkImage(servicio.imagen!),
               ),
       )
     ],
   );
-}
-
-_peluqueroServiciosToString(Peluquero peluquero) {
-  String salida = "";
-  peluquero.servicios.forEach((key, value) {
-    salida += value.nombre;
-    salida += ", ";
-  });
-  return salida.substring(0, salida.length - 2);
 }

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pelucapp/services/peluquero_services.dart';
+import 'package:pelucapp/services/reservas_services.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:pelucapp/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../models/models.dart';
 
 class HorarioScreen extends StatefulWidget {
   const HorarioScreen({Key? key}) : super(key: key);
@@ -16,39 +21,43 @@ class _HorarioScreenState extends State<HorarioScreen> {
   DateTime selected = DateTime.now();
   DateTime now = DateTime.now();
 
+  bool _fechaOcupada = false;
+
   bool _horaSeleccionada = false;
 
-  Color _colorboton1000 = AppTheme.backgroundColor;
+  Color _colorboton1000 = Colors.white;
+  Color _colorboton1030 = Colors.white;
+  Color _colorboton1100 = Colors.white;
+  Color _colorboton1130 = Colors.white;
+  Color _colorboton1200 = Colors.white;
+  Color _colorboton1230 = Colors.white;
+  Color _colorboton1300 = Colors.white;
+  Color _colorboton1330 = Colors.white;
+  Color _colorboton1700 = Colors.white;
+  Color _colorboton1730 = Colors.white;
+  Color _colorboton1800 = Colors.white;
+  Color _colorboton1830 = Colors.white;
+  Color _colorboton1900 = Colors.white;
+  Color _colorboton1930 = Colors.white;
+  Color _colorboton2000 = Colors.white;
+  Color _colorboton2030 = Colors.white;
 
-  Color _colorboton1030 = AppTheme.backgroundColor;
-
-  Color _colorboton1100 = AppTheme.backgroundColor;
-
-  Color _colorboton1130 = AppTheme.backgroundColor;
-
-  Color _colorboton1200 = AppTheme.backgroundColor;
-
-  Color _colorboton1230 = AppTheme.backgroundColor;
-
-  Color _colorboton1300 = AppTheme.backgroundColor;
-
-  Color _colorboton1330 = AppTheme.backgroundColor;
-
-  Color _colorboton1700 = AppTheme.backgroundColor;
-
-  Color _colorboton1730 = AppTheme.backgroundColor;
-
-  Color _colorboton1800 = AppTheme.backgroundColor;
-
-  Color _colorboton1830 = AppTheme.backgroundColor;
-
-  Color _colorboton1900 = AppTheme.backgroundColor;
-
-  Color _colorboton1930 = AppTheme.backgroundColor;
-
-  Color _colorboton2000 = AppTheme.backgroundColor;
-
-  Color _colorboton2030 = AppTheme.backgroundColor;
+  Color _colortexto1000 = Colors.black;
+  Color _colortexto1030 = Colors.black;
+  Color _colortexto1100 = Colors.black;
+  Color _colortexto1130 = Colors.black;
+  Color _colortexto1200 = Colors.black;
+  Color _colortexto1230 = Colors.black;
+  Color _colortexto1300 = Colors.black;
+  Color _colortexto1330 = Colors.black;
+  Color _colortexto1700 = Colors.black;
+  Color _colortexto1730 = Colors.black;
+  Color _colortexto1800 = Colors.black;
+  Color _colortexto1830 = Colors.black;
+  Color _colortexto1900 = Colors.black;
+  Color _colortexto1930 = Colors.black;
+  Color _colortexto2000 = Colors.black;
+  Color _colortexto2030 = Colors.black;
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
@@ -80,6 +89,8 @@ class _HorarioScreenState extends State<HorarioScreen> {
         if (color != AppTheme.primary) color = AppTheme.primary;
       }
     }*/
+    final reservasServices = Provider.of<ReservaServices>(context);
+    final peluquerosServices = Provider.of<PeluquerosServices>(context);
 
     void swapSeleccionada() {
       if (_horaSeleccionada) {
@@ -89,6 +100,19 @@ class _HorarioScreenState extends State<HorarioScreen> {
           _horaSeleccionada = true;
         });
       }
+    }
+
+    bool fechaOcupada(String cadenaFecha) {
+      List<Reserva> coincidencias = reservasServices.reservas
+          .where((reserva) => (reserva.fecha == cadenaFecha &&
+              reserva.peluquero ==
+                  peluquerosServices.peluqueroSeleccionado!.id &&
+              reserva.cancelada == false))
+          .toList();
+      if (coincidencias.isEmpty) {
+        return false;
+      }
+      return true;
     }
 
     return Scaffold(
@@ -108,12 +132,13 @@ class _HorarioScreenState extends State<HorarioScreen> {
         body: Column(
           children: [
             TableCalendar(
-              locale: 'en_US',
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              locale: 'es_ES' /*'en_US'*/,
               rowHeight: 50,
               calendarFormat: CalendarFormat.week,
               headerStyle: const HeaderStyle(
                   formatButtonVisible: false, titleCentered: true),
-              firstDay: now,
+              firstDay: now /*now*/,
               availableGestures: AvailableGestures.all,
               selectedDayPredicate: (day) => isSameDay(day, selected),
               focusedDay: selected,
@@ -134,52 +159,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1000,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1000,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 10, 00, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1000 = AppTheme.secondary;
+                                  _colorboton1000 = Colors.black;
+                                  _colortexto1000 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1000 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("10:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "10:00",
+                                style: TextStyle(color: _colortexto1000),
+                              ),
                             ),
                           ),
                         ),
@@ -189,52 +228,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1030,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1030,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 10, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1030 = AppTheme.secondary;
+                                  _colorboton1030 = Colors.black;
+                                  _colortexto1030 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("10:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "10:30",
+                                style: TextStyle(color: _colortexto1030),
+                              ),
                             ),
                           ),
                         ),
@@ -244,52 +297,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1100,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1100,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 11, 00, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1100 = AppTheme.secondary;
+                                  _colorboton1100 = Colors.black;
+                                  _colortexto1100 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("11:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "11:00",
+                                style: TextStyle(color: _colortexto1100),
+                              ),
                             ),
                           ),
                         ),
@@ -299,52 +366,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1130,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1130,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 11, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1130 = AppTheme.secondary;
+                                  _colorboton1130 = Colors.black;
+                                  _colortexto1130 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("11:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "11:30",
+                                style: TextStyle(color: _colortexto1130),
+                              ),
                             ),
                           ),
                         ),
@@ -361,54 +442,67 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1200,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1200,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 12, 00, 0, 0);
-
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1200 = AppTheme.secondary;
+                                  _colorboton1200 = Colors.black;
+                                  _colortexto1200 = Colors.white;
                                 });
 
                                 /*setState(() {
                                     _colorboton1000 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("12:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "12:00",
+                                style: TextStyle(color: _colortexto1200),
+                              ),
                             ),
                           ),
                         ),
@@ -418,52 +512,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1230,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1230,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 12, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1230 = AppTheme.secondary;
+                                  _colorboton1230 = Colors.black;
+                                  _colortexto1230 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("12:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "12:30",
+                                style: TextStyle(color: _colortexto1230),
+                              ),
                             ),
                           ),
                         ),
@@ -473,52 +581,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1300,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1300,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 13, 00, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1300 = AppTheme.secondary;
+                                  _colorboton1300 = Colors.black;
+                                  _colortexto1300 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("13:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "13:00",
+                                style: TextStyle(color: _colortexto1300),
+                              ),
                             ),
                           ),
                         ),
@@ -528,52 +650,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1330,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1330,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 13, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1330 = AppTheme.secondary;
+                                  _colorboton1330 = Colors.black;
+                                  _colortexto1330 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("13:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "13:30",
+                                style: TextStyle(color: _colortexto1330),
+                              ),
                             ),
                           ),
                         ),
@@ -590,52 +726,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1700,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1700,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 17, 00, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1700 = AppTheme.secondary;
+                                  _colorboton1700 = Colors.black;
+                                  _colortexto1700 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1000 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("17:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "17:00",
+                                style: TextStyle(color: _colortexto1700),
+                              ),
                             ),
                           ),
                         ),
@@ -645,52 +795,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1730,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1730,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 17, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1730 = AppTheme.secondary;
+                                  _colorboton1730 = Colors.black;
+                                  _colortexto1730 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("17:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "17:30",
+                                style: TextStyle(color: _colortexto1730),
+                              ),
                             ),
                           ),
                         ),
@@ -700,52 +864,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1800,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1800,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 18, 00, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1800 = AppTheme.secondary;
+                                  _colorboton1800 = Colors.black;
+                                  _colortexto1800 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("18:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "18:00",
+                                style: TextStyle(color: _colortexto1800),
+                              ),
                             ),
                           ),
                         ),
@@ -755,52 +933,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1830,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1830,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 18, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1830 = AppTheme.secondary;
+                                  _colorboton1830 = Colors.black;
+                                  _colortexto1830 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("18:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "18:30",
+                                style: TextStyle(color: _colortexto1830),
+                              ),
                             ),
                           ),
                         ),
@@ -817,52 +1009,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1900,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1900,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 19, 00, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1900 = AppTheme.secondary;
+                                  _colorboton1900 = Colors.black;
+                                  _colortexto1900 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1000 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("19:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "19:00",
+                                style: TextStyle(color: _colortexto1900),
+                              ),
                             ),
                           ),
                         ),
@@ -872,52 +1078,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton1930,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton1930,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 19, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton1930 = AppTheme.secondary;
+                                  _colorboton1930 = Colors.black;
+                                  _colortexto1930 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("19:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "19:30",
+                                style: TextStyle(color: _colortexto1930),
+                              ),
                             ),
                           ),
                         ),
@@ -927,52 +1147,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton2000,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton2000,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
                                 selected = DateTime(selected.year,
                                     selected.month, selected.day, 20, 00, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
                                 setState(() {
                                   _horaSeleccionada = true;
-                                  _colorboton1000 = AppTheme.backgroundColor;
 
-                                  _colorboton1030 = AppTheme.backgroundColor;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                  _colorboton1100 = AppTheme.backgroundColor;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                  _colorboton1130 = AppTheme.backgroundColor;
-
-                                  _colorboton1200 = AppTheme.backgroundColor;
-
-                                  _colorboton1230 = AppTheme.backgroundColor;
-
-                                  _colorboton1300 = AppTheme.backgroundColor;
-
-                                  _colorboton1330 = AppTheme.backgroundColor;
-
-                                  _colorboton1700 = AppTheme.backgroundColor;
-
-                                  _colorboton1730 = AppTheme.backgroundColor;
-
-                                  _colorboton1800 = AppTheme.backgroundColor;
-
-                                  _colorboton1830 = AppTheme.backgroundColor;
-
-                                  _colorboton1900 = AppTheme.backgroundColor;
-
-                                  _colorboton1930 = AppTheme.backgroundColor;
-
-                                  _colorboton2000 = AppTheme.backgroundColor;
-
-                                  _colorboton2030 = AppTheme.backgroundColor;
-                                  _colorboton2000 = AppTheme.secondary;
+                                  _colorboton2000 = Colors.black;
+                                  _colortexto2000 = Colors.white;
                                 });
                                 /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
                               },
-                              child: Text("20:00", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "20:00",
+                                style: TextStyle(color: _colortexto2000),
+                              ),
                             ),
                           ),
                         ),
@@ -982,60 +1216,66 @@ class _HorarioScreenState extends State<HorarioScreen> {
                             width: 70,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                side: const BorderSide(width: 2, color: AppTheme.primary),
-                                primary: _colorboton2030,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                elevation: 4.0,
+                                backgroundColor: _colorboton2030,
+                                side: BorderSide(color: Colors.black),
                               ),
                               onPressed: () {
-                                if (!_horaSeleccionada) {
-                                  selected = DateTime(
-                                      selected.year,
-                                      selected.month,
-                                      selected.day,
-                                      20,
-                                      30,
-                                      0,
-                                      0);
-                                  setState(() {
-                                    _horaSeleccionada = true;
-                                    _colorboton1000 = AppTheme.primary;
+                                selected = DateTime(selected.year,
+                                    selected.month, selected.day, 20, 30, 0, 0);
+                                _fechaOcupada =
+                                    fechaOcupada(selected.toString());
+                                setState(() {
+                                  _horaSeleccionada = true;
 
-                                    _colorboton1030 = AppTheme.primary;
+                                  _colorboton1000 = Colors.white;
+                                  _colorboton1030 = Colors.white;
+                                  _colorboton1100 = Colors.white;
+                                  _colorboton1130 = Colors.white;
+                                  _colorboton1200 = Colors.white;
+                                  _colorboton1230 = Colors.white;
+                                  _colorboton1300 = Colors.white;
+                                  _colorboton1330 = Colors.white;
+                                  _colorboton1700 = Colors.white;
+                                  _colorboton1730 = Colors.white;
+                                  _colorboton1800 = Colors.white;
+                                  _colorboton1830 = Colors.white;
+                                  _colorboton1900 = Colors.white;
+                                  _colorboton1930 = Colors.white;
+                                  _colorboton2000 = Colors.white;
+                                  _colorboton2030 = Colors.white;
 
-                                    _colorboton1100 = AppTheme.primary;
+                                  _colortexto1000 = Colors.black;
+                                  _colortexto1030 = Colors.black;
+                                  _colortexto1100 = Colors.black;
+                                  _colortexto1130 = Colors.black;
+                                  _colortexto1200 = Colors.black;
+                                  _colortexto1230 = Colors.black;
+                                  _colortexto1300 = Colors.black;
+                                  _colortexto1330 = Colors.black;
+                                  _colortexto1700 = Colors.black;
+                                  _colortexto1730 = Colors.black;
+                                  _colortexto1800 = Colors.black;
+                                  _colortexto1830 = Colors.black;
+                                  _colortexto1900 = Colors.black;
+                                  _colortexto1930 = Colors.black;
+                                  _colortexto2000 = Colors.black;
+                                  _colortexto2030 = Colors.black;
 
-                                    _colorboton1130 = AppTheme.primary;
-
-                                    _colorboton1200 = AppTheme.primary;
-
-                                    _colorboton1230 = AppTheme.primary;
-
-                                    _colorboton1300 = AppTheme.primary;
-
-                                    _colorboton1330 = AppTheme.primary;
-
-                                    _colorboton1700 = AppTheme.primary;
-
-                                    _colorboton1730 = AppTheme.primary;
-
-                                    _colorboton1800 = AppTheme.primary;
-
-                                    _colorboton1830 = AppTheme.primary;
-
-                                    _colorboton1900 = AppTheme.primary;
-
-                                    _colorboton1930 = AppTheme.primary;
-
-                                    _colorboton2000 = AppTheme.primary;
-
-                                    _colorboton2030 = AppTheme.primary;
-                                    _colorboton2030 = AppTheme.secondary;
-                                  });
-                                  /*setState(() {
+                                  _colorboton2030 = Colors.black;
+                                  _colortexto2030 = Colors.white;
+                                });
+                                /*setState(() {
                                     _colorboton1015 = AppTheme.secondary;
                                   });*/
-                                }
                               },
-                              child: Text("20:30", style: TextStyle(color: AppTheme.mainTextColor),),
+                              child: Text(
+                                "20:30",
+                                style: TextStyle(color: _colortexto2030),
+                              ),
                             ),
                           ),
                         ),
@@ -1053,7 +1293,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                 ),
-                onPressed: !_horaSeleccionada
+                onPressed: (!_horaSeleccionada || _fechaOcupada)
                     ? null
                     : () => {
                           Navigator.pushNamed(context, 'resumen',

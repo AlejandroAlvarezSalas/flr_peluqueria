@@ -5,11 +5,19 @@ import 'package:http/http.dart' as http;
 
 class ReservaServices extends ChangeNotifier {
   final String _baseURL =
-      "peluqueria-f52fb-default-rtdb.europe-west1.firebasedatabase.app";
+      "recuperacion-flutter-93b2a-default-rtdb.europe-west1.firebasedatabase.app";
   final List<Reserva> reservas = [];
-  Reserva? reservaSeleccionada;
+  Reserva? reservaSeleccionada = Reserva(
+      fecha: '',
+      pago: '',
+      peluquero: '',
+      peluqueria: '',
+      servicios: {'': false},
+      usuario: '');
 
   bool isLoading = true;
+  bool desdePeluquero = false;
+  String datosUsuario = "default";
 
   ReservaServices() {
     this.loadReserva();
@@ -44,9 +52,17 @@ class ReservaServices extends ChangeNotifier {
   }
 
   Future create(Reserva reserva) async {
+    int tamano = reservas.length + 2;
+    reserva.id = "RSV00" + tamano.toString();
+    if (desdePeluquero) {
+      reserva.id = "manual";
+    }
     final url = Uri.https(_baseURL, 'reserva.json');
     await http.post(url, body: reserva.toJson());
 
+    /*int tamano = reservas.length + 2;
+    reserva.id = "RSV00" + tamano.toString();
+*/
     reservas.add(reserva);
   }
 
@@ -68,6 +84,17 @@ class ReservaServices extends ChangeNotifier {
 
   Future cancelarReserva(Reserva reserva) async {
     reserva.cancelada = true;
+    update(reserva);
+
+    //cambio la hora a true en el peluquero TODO
+  }
+
+  Future alternarPagadaReserva(Reserva reserva) async {
+    if (reserva.pagada) {
+      reserva.pagada = false;
+    } else {
+      reserva.pagada = true;
+    }
     update(reserva);
 
     //cambio la hora a true en el peluquero TODO

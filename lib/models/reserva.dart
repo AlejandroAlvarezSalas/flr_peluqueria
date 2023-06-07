@@ -5,16 +5,17 @@
 import 'dart:convert';
 
 class Reserva {
-  Reserva({
-    required this.fecha,
-    required this.pago,
-    this.codigoBizum,
-    required this.peluquero,
-    required this.peluqueria,
-    required this.servicios,
-    required this.usuario,
-    this.cancelada = false,
-  });
+  Reserva(
+      {required this.fecha,
+      required this.pago,
+      this.codigoBizum,
+      required this.peluquero,
+      required this.peluqueria,
+      required this.servicios,
+      required this.usuario,
+      this.cancelada = false,
+      this.pagada = false,
+      this.telefonica = false});
   String? id;
   String fecha;
   String pago;
@@ -24,6 +25,8 @@ class Reserva {
   String usuario;
   bool cancelada;
   String? codigoBizum = 'Sin código';
+  bool pagada = false;
+  bool telefonica = false;
 
   factory Reserva.fromJson(String str) => Reserva.fromMap(json.decode(str));
 
@@ -39,6 +42,8 @@ class Reserva {
             .map((k, v) => MapEntry<String, bool>(k, v)),
         usuario: json['usuario'],
         cancelada: json['cancelada'],
+        pagada: json['pagada'],
+        telefonica: json['telefonica'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -50,6 +55,8 @@ class Reserva {
         'servicios':
             Map.from(servicios).map((k, v) => MapEntry<String, dynamic>(k, v)),
         'usuario': usuario,
-        'cancelada': cancelada
+        'cancelada': cancelada,
+        'pagada': pagada,
+        'telefonica': telefonica
       };
 }

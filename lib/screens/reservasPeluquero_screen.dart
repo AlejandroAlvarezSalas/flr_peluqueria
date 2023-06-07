@@ -10,17 +10,16 @@ import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
-class MisReservasScreen extends StatefulWidget {
-  const MisReservasScreen({super.key});
+class ReservasPeluqueroScreen extends StatefulWidget {
+  const ReservasPeluqueroScreen({super.key});
 
   @override
-  _MisReservasScreenState createState() => _MisReservasScreenState();
+  _ReservasPeluqueroScreen createState() => _ReservasPeluqueroScreen();
 }
 
-class _MisReservasScreenState extends State<MisReservasScreen>
-    with AutomaticKeepAliveClientMixin<MisReservasScreen> {
+class _ReservasPeluqueroScreen extends State<ReservasPeluqueroScreen> {
   static final double radius = 20;
-
+/*
   static const List<Widget> _pages = <Widget>[
     CitaScreen(),
     MisReservasScreen(),
@@ -28,7 +27,7 @@ class _MisReservasScreenState extends State<MisReservasScreen>
     ProfileHomePage(),
     PeluquerosScreen(),
   ];
-
+*/
   UniqueKey? keyTile;
   bool isExpanded = false;
 
@@ -51,23 +50,61 @@ class _MisReservasScreenState extends State<MisReservasScreen>
     final ReservaServices reservaServices =
         Provider.of<ReservaServices>(context);
 
-    List<Reserva> obtenerReservasUsuario(String usuario_id) {
+    List<Reserva> obtenerReservasPeluquero(String peluquero_id) {
       List<Reserva> reservas = reservaServices.reservas;
-      List<Reserva> reservasUsuario = [];
+      List<Reserva> reservasPeluquero = [];
+      final usuariosServices = Provider.of<UsuariosServices>(context);
       for (var reserva in reservas) {
-        if (reserva.usuario == usuario_id && !reserva.cancelada) {
-          reservasUsuario.add(reserva);
+        List<Usuario> usuarioReserva = [];
+        usuarioReserva = usuariosServices.usuarios
+            .where((usuario) =>
+                usuario.id == reserva.usuario ||
+                reserva
+                    .telefonica) //o el usuario existe o la cita es telefonica
+            .toList(); //para quitarme los usuarios que ya no existan pero tengan reserva
+        if (reserva.peluquero == peluquero_id &&
+            !reserva.cancelada &&
+            !usuarioReserva.isEmpty) {
+          reservasPeluquero.add(reserva);
         }
       }
-      return reservasUsuario;
+      return reservasPeluquero;
     }
 
     final usuariosServices = Provider.of<UsuariosServices>(context);
     final Usuario usuario = usuariosServices.usuarioLogin!;
 
-    List<Reserva> reservas = obtenerReservasUsuario(usuario.id.toString());
+    final peluquerosServices = Provider.of<PeluquerosServices>(context);
+    final Peluquero peluquero = peluquerosServices.peluqueros.firstWhere(
+        (peluquero) =>
+            peluquero.telefono ==
+            usuario
+                .telefono); //uso el numero de telefono como identificador de los peluqueros
+    List<Reserva> reservas = obtenerReservasPeluquero(peluquero.id.toString());
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new, color: AppTheme.mainTextColor),
+        ),
+        title: BigText(
+          text: 'PELUCAPP',
+          color: AppTheme.primary,
+          size: 25,
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.pushNamed(context, 'datosCita');
+            },
+          ),
+        ],
+      ),
       body: ListView.builder(
         itemCount: reservas.length /*peluqueriasServices.peluquerias.length*/,
         itemBuilder: (BuildContext context, int index) {
@@ -131,15 +168,21 @@ class _MisReservasScreenState extends State<MisReservasScreen>
     Peluqueria peluqueriaCita = peluqueriasServices.peluquerias[
         0]; /*
         .firstWhere((peluqueria) => peluqueria.nif == reserva.peluqueria);*/
-    print('DATOSPELUQUERO: ${peluqueriaCita.peluqueros.toString()}');
-    Peluquero peluqueroCita = peluqueroServices.peluqueros.firstWhere(
-        (peluquero) => peluquero.id == reserva.peluquero,
-        orElse: () => new Peluquero(
-            atiende: 'Ambos',
-            horario: new Map(),
-            nombre: 'peluquero no encontrado',
-            servicios: new Map(),
-            telefono: 0));
+    print('DATOSCLIENTE: ${peluqueriaCita.peluqueros.toString()}');
+    Usuario usuarioCita = usuariosServices.usuarios.firstWhere(
+        (usuario) => usuario.id == reserva.usuario,
+        orElse: () => new Usuario(
+            email: 'default@gmail.com',
+            genero: 'hombre',
+            nombre: reserva.usuario ?? 'noname',
+            password: 'nopass',
+            telefono: 0,
+            verificado: true));
+    final Usuario usuario = usuariosServices.usuarioLogin!;
+
+    final Peluquero peluquero = peluqueroServices.peluqueros
+        .firstWhere((peluquero) => peluquero.telefono == usuario.telefono);
+
     List<Servicio> serviciosCita = serviciosServices.servicios
         .where(
             (servicio) => reserva.servicios.keys.toList().contains(servicio.id))
@@ -155,7 +198,7 @@ class _MisReservasScreenState extends State<MisReservasScreen>
 
     int sumaTiempo = serviciosCita.fold<int>(
         0, (previousValue, servicio) => previousValue + servicio.tiempo);
-
+    String portada = usuarioCita.nombre + ': ' + reserva.fecha;
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
@@ -163,12 +206,14 @@ class _MisReservasScreenState extends State<MisReservasScreen>
         initiallyExpanded: isExpanded,
         childrenPadding: EdgeInsets.all(16).copyWith(top: 0),
         title: Text(
-          '${peluqueriaCita.nombre}',
+          /*
+          '${peluqueriaCita.nombre}'*/
+          portada.substring(0, portada.length - 7),
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
         ),
         children: [
           Text('Peluquería:  ${peluqueriaCita.nombre}'),
-          Text('Peluquero: ${peluqueroCita.nombre}'),
+          Text('Usuario: ${usuarioCita.nombre}'),
           Text('Dirección: ${peluqueriaCita.direccion}'),
           Text('Fecha: ${reserva.fecha.toString()}'),
           Text('Servicios: ${nombresServicios.toString()}'),
@@ -176,21 +221,20 @@ class _MisReservasScreenState extends State<MisReservasScreen>
           Text('Código: ${reserva.codigoBizum}'),
           Text('Coste total: ${sumaPrecios}'),
           Text('Tiempo total: ${sumaTiempo}'),
+          Text('Pagada: ${reserva.pagada}'),
           ElevatedButton(
               onPressed: () {
                 //meter el sueldo
-                if (reserva.pago != 'efectivo') {
-                  usuariosServices.usuarioLogin!.saldo =
-                      usuariosServices.usuarioLogin!.saldo! + sumaPrecios
-                          as double;
-                  usuariosServices
-                      .updateUsuario(usuariosServices.usuarioLogin!);
-                }
-                reservaServices.cancelarReserva(reserva);
-                Navigator.pushNamed(context, 'home');
+                /*usuarioCita.saldo = usuarioCita.saldo ?? 0 + sumaPrecios;
+                usuariosServices.updateUsuario(usuarioCita);
+                reservaServices.cancelarReserva(reserva);*/
+                reservaServices.reservaSeleccionada = reserva;
+                peluqueroServices.peluqueroSeleccionado = peluquero;
+                serviciosServices.ServiciosSeleccionados = serviciosCita;
+                Navigator.pushNamed(context, 'editarReserva');
                 //seleccionado = true;
               },
-              child: Text('Cancelar')),
+              child: Text('Editar')),
         ],
         /*onExpansionChanged: (isExpanded) => Utils.showSnackBar(
             context,
@@ -200,8 +244,4 @@ class _MisReservasScreenState extends State<MisReservasScreen>
       ),
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => false;
 }

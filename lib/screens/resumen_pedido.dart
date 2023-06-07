@@ -16,7 +16,8 @@ class ResumenPedidoScreen extends StatelessWidget {
     final peluquerosServices = Provider.of<PeluquerosServices>(context);
     final serviciosServices = Provider.of<ServiciosServices>(context);
 
-    final peluqueria = peluqueriasServices.peluqueriaSeleccionada!;
+    final peluqueria = peluqueriasServices
+        .peluquerias[0] /*peluqueriasServices.peluqueriaSeleccionada!*/;
     final peluquero = peluquerosServices.peluqueroSeleccionado!;
     final serviciosSeleccionados = serviciosServices.ServiciosSeleccionados;
 

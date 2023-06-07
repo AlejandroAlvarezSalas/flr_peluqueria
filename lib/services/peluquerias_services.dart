@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:pelucapp/models/models.dart';
 import 'package:http/http.dart' as http;
 
-class PeluqueriasServices extends ChangeNotifier{
-  final String _baseURL = "peluqueria-f52fb-default-rtdb.europe-west1.firebasedatabase.app";
+class PeluqueriasServices extends ChangeNotifier {
+  final String _baseURL =
+      "recuperacion-flutter-93b2a-default-rtdb.europe-west1.firebasedatabase.app";
   final List<Peluqueria> peluquerias = [];
   Peluqueria? peluqueriaSeleccionada;
   bool isLoading = true;
 
-  PeluqueriasServices(){
+  PeluqueriasServices() {
     loadPeluquerias();
   }
 
@@ -18,7 +19,7 @@ class PeluqueriasServices extends ChangeNotifier{
     isLoading = true;
     notifyListeners();
 
-    final url = Uri.https( _baseURL, 'peluquerias.json');
+    final url = Uri.https(_baseURL, 'peluquerias.json');
     final resp = await http.get(url);
 
     final Map<String, dynamic> peluqueriasMap = json.decode(resp.body);

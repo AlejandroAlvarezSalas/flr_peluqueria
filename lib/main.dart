@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pelucapp/screens/screens.dart';
+import 'package:pelucapp/services/gerentes_services.dart';
+import 'package:pelucapp/services/novedades_services.dart';
 import 'package:pelucapp/services/reservas_services.dart';
 import 'package:pelucapp/services/services.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() => runApp(AppState());
+//void main() => runApp(AppState());
+void main() {
+  initializeDateFormatting().then((_) => runApp(AppState()));
+}
 
 class AppState extends StatelessWidget {
   @override
@@ -17,6 +23,8 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (context) => ServiciosServices()),
       ChangeNotifierProvider(create: (context) => UsuariosServices()),
       ChangeNotifierProvider(create: (context) => ReservaServices()),
+      ChangeNotifierProvider(create: (context) => NovedadesServices()),
+      ChangeNotifierProvider(create: (context) => GerentesServices()),
     ], child: MyApp());
   }
 }
@@ -54,6 +62,14 @@ class MyApp extends StatelessWidget {
         'privacidad': (context) => PrivacidadScreen(),
         'gestionPeluqueros': (context) => GestionPeluquerosScreen(),
         'editarPeluquero': (context) => EditarPeluqueroScreen(),
+        'gestionNovedades': (context) => GestionNovedadesScreen(),
+        'editarNovedades': (context) => EditarNovedadesScreen(),
+        'gestionServicios': (context) => GestionServiciosScreen(),
+        'editarServicios': (context) => EditarServiciosScreen(),
+        'reservasPeluquero': (context) => ReservasPeluqueroScreen(),
+        'editarReserva': (context) => EditarReservaScreen(),
+        'datosCita': (context) => DatosCitaScreen(),
+        'pantallaIntermedia': (context) => PantallaIntermediaSreen(),
       },
     );
   }

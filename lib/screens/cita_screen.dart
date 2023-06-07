@@ -2,6 +2,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:pelucapp/models/models.dart';
 import 'package:pelucapp/screens/screens.dart';
+import 'package:pelucapp/services/novedades_services.dart';
 import 'package:pelucapp/services/services.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:pelucapp/widgets/widgets.dart';
@@ -41,15 +42,19 @@ class _CitaScreenState extends State<CitaScreen> {
 
     final peluquerosServices = Provider.of<PeluquerosServices>(context);
     final serviciosServices = Provider.of<ServiciosServices>(context);
+    final reservaServices = Provider.of<ReservaServices>(context);
+    final novedadesServices = Provider.of<NovedadesServices>(context);
 
     PageController pageController = PageController(viewportFraction: 0.75);
 
     List<Peluquero> peluqueros =
         getPeluquerosCita(peluquerosServices.peluqueros);
 
+    List<Novedad> novedades = getNovedadesCita(novedadesServices.novedades);
+
     if (peluqueriasServices.isLoading) return LoadingScreen();
 
-    List<Novedad> novedades = [
+    /*List<Novedad> novedades = [
       Novedad(
           titulo: 'Regalos',
           descripcion:
@@ -65,7 +70,7 @@ class _CitaScreenState extends State<CitaScreen> {
           descripcion: 'instagram.com/PelucApp',
           imagen:
               'https://as01.epimg.net/meristation/imagenes/2022/04/13/betech/1649871138_326571_1649871350_noticia_normal_recorte1.jpg')
-    ];
+    ];*/
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -82,13 +87,14 @@ class _CitaScreenState extends State<CitaScreen> {
                 controller: pageController,
                 itemCount: novedades.length,
                 itemBuilder: (context, index) {
-                  return _buildNovedadesItem(index, novedades[index]);
+                  return _buildNovedadesItem(
+                      index, novedades[index] as Novedad);
                 }),
           ),
           SizedBox(
             height: 10,
           ),
-          new DotsIndicator(
+          /*new DotsIndicator(
             dotsCount: novedades.length,
             position: _currPageValue,
             decorator: DotsDecorator(
@@ -98,11 +104,11 @@ class _CitaScreenState extends State<CitaScreen> {
               activeShape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0)),
             ),
-          ),
+          ),*/
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
-              'Elige tu peluquero',
+              'Elige tu peluquería',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -116,14 +122,19 @@ class _CitaScreenState extends State<CitaScreen> {
                 itemCount: peluqueros.length,
                 itemBuilder: (context, index) {
                   Peluquero peluquero = peluqueros[index];
-                  return _buildPeluquerosCard(peluquero, peluquerosServices,
-                      serviciosServices, context);
+                  return _buildPeluquerosCard(
+                      peluquero,
+                      peluqueriasServices,
+                      peluquerosServices,
+                      serviciosServices,
+                      reservaServices,
+                      context);
                 }),
           ),
           const SizedBox(
             height: 90,
           ),
-          /*_PeluqueriasListView(peluqueriasServices: peluqueriasServices),*/
+          //_PeluqueriasListView(peluqueriasServices: peluqueriasServices),
         ],
       ),
     );
@@ -166,7 +177,7 @@ class _CitaScreenState extends State<CitaScreen> {
               borderRadius: BorderRadius.circular(30),
               color: Colors.black,
               image: DecorationImage(
-                  image: NetworkImage(novedad.imagen),
+                  image: NetworkImage(novedad.imagen!),
                   opacity: 0.4,
                   fit: BoxFit.cover),
             ),
@@ -217,7 +228,7 @@ class _PeluqueriasListView extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               peluqueriasServices.peluqueriaSeleccionada =
-                  peluqueriasServices.peluquerias[index];
+                  peluqueriasServices.peluquerias[0 /*index*/];
               Navigator.pushNamed(context, 'peluqueros');
             },
             child: Container(
@@ -286,31 +297,55 @@ class _PeluqueriasListView extends StatelessWidget {
         });
   }
 }
-
+/*
 class Novedad {
   final String titulo;
   final String? descripcion;
   final String imagen;
 
   Novedad({required this.titulo, this.descripcion, required this.imagen});
-}
+}*/
 
-List<Peluquero> getPeluquerosCita(List<Peluquero> peluqueros) {
-  /*List<Peluquero> peluqueros = [];
-  peluqueros.forEach((key, value) {
+List<Peluquero> getPeluquerosCita(List<Peluquero> peluquerosSinComprobar) {
+  List<Peluquero> peluqueros = [];
+  /*peluqueros.forEach((key, value) {
     final tempPeluquero = value;
     tempPeluquero.id = key;
     if (!value.borrado) {
       peluqueros.add(tempPeluquero);
     }
   });*/
+  for (var peluquero in peluquerosSinComprobar) {
+    if (!peluquero.borrado) {
+      peluqueros.add(peluquero);
+    }
+  }
   return peluqueros;
+}
+
+List<Novedad> getNovedadesCita(List<Novedad> novedadesSinComprobar) {
+  List<Novedad> novedades = [];
+  /*peluqueros.forEach((key, value) {
+    final tempPeluquero = value;
+    tempPeluquero.id = key;
+    if (!value.borrado) {
+      peluqueros.add(tempPeluquero);
+    }
+  });*/
+  for (var novedad in novedadesSinComprobar) {
+    if (!novedad.borrado) {
+      novedades.add(novedad);
+    }
+  }
+  return novedades;
 }
 
 Widget _buildPeluquerosCard(
     Peluquero peluquero,
+    PeluqueriasServices peluqueriasServices,
     PeluquerosServices peluquerosServices,
     ServiciosServices serviciosServices,
+    ReservaServices reservaServices,
     context) {
   return Stack(
     children: [
@@ -369,9 +404,12 @@ Widget _buildPeluquerosCard(
                       icon: const Icon(Icons.check_circle),
                       alignment: Alignment.bottomRight,
                       onPressed: () {
+                        peluqueriasServices.peluqueriaSeleccionada =
+                            peluqueriasServices.peluquerias[0 /*index*/];
                         peluquerosServices.peluqueroSeleccionado = peluquero;
                         serviciosServices
                             .deleteServiciosSeleccionados(peluquero);
+                        reservaServices.reservaSeleccionada!.id = null;
                         Navigator.pushNamed(context, 'servicios');
                       },
                       color: AppTheme.primary,

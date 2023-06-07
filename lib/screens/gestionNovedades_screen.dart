@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:pelucapp/models/models.dart';
+import 'package:pelucapp/services/novedades_services.dart';
 import 'package:pelucapp/services/services.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:pelucapp/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class GestionPeluquerosScreen extends StatelessWidget {
-  const GestionPeluquerosScreen({
+class GestionNovedadesScreen extends StatelessWidget {
+  const GestionNovedadesScreen({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final peluqueriasServices = Provider.of<PeluqueriasServices>(context);
-    final peluquerosServices = Provider.of<PeluquerosServices>(context);
-    final serviciosServices = Provider.of<ServiciosServices>(context);
+    final NovedadesServices novedadesServices =
+        Provider.of<NovedadesServices>(context);
 
     PageController pageController = PageController(viewportFraction: 0.75);
 
-    List<Peluquero> peluqueros = peluquerosServices.peluqueros;
+    List<Novedad> novedades = novedadesServices.novedades;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +39,7 @@ class GestionPeluquerosScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: SmallText(
-              text: 'Listado de peluqueros',
+              text: 'Listado de novedades',
               color: AppTheme.mainTextColor,
             ),
           ),
@@ -47,11 +47,11 @@ class GestionPeluquerosScreen extends StatelessWidget {
             height: 450,
             child: PageView.builder(
                 controller: pageController,
-                itemCount: peluqueros.length,
+                itemCount: novedades.length,
                 itemBuilder: (context, index) {
-                  Peluquero peluquero = peluqueros[index];
-                  return _buildPeluquerosCard(peluquero, peluquerosServices,
-                      serviciosServices, context);
+                  Novedad novedad = novedades[index];
+                  return _buildPeluquerosCard(
+                      novedad, novedadesServices, context);
                 }),
           ),
           const SizedBox(height: 80),
@@ -76,11 +76,11 @@ class GestionPeluquerosScreen extends StatelessWidget {
                     Navigator.pushNamed(context, 'home');
                   },*/
                   () {
-                peluquerosServices.peluqueroSeleccionado = null;
-                Navigator.pushNamed(context, 'editarPeluquero');
+                novedadesServices.novedadSeleccionada = null;
+                Navigator.pushNamed(context, 'editarNovedades');
               },
-              child: const Text('Añadir peluquero',
-                  style: TextStyle(fontSize: 30)),
+              child:
+                  const Text('Añadir novedad', style: TextStyle(fontSize: 30)),
             ),
           ),
         ],
@@ -100,10 +100,7 @@ List<Peluquero> getPeluquerosGestion(List<Peluqueria> peluquerias) {
 }*/
 
 Widget _buildPeluquerosCard(
-    Peluquero peluquero,
-    PeluquerosServices peluquerosServices,
-    ServiciosServices serviciosServices,
-    context) {
+    Novedad novedad, NovedadesServices novedadesServices, context) {
   return Stack(
     children: [
       Align(
@@ -133,22 +130,20 @@ Widget _buildPeluquerosCard(
                   height: 90,
                 ),
                 BigText(
-                  text: peluquero.nombre,
+                  text: novedad.titulo,
                   color: AppTheme.mainTextColor,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 BigText(
-                    text: 'Servicios disponibles:',
+                    text: 'Descripción:',
                     color: AppTheme.mainTextColor,
                     size: 20),
                 const SizedBox(
                   height: 10,
                 ),
-                SmallText(
-                    text: _peluqueroServiciosToString(peluquero),
-                    color: Colors.black45),
+                SmallText(text: novedad.descripcion, color: Colors.black45),
                 const SizedBox(
                   height: 10,
                 ),
@@ -161,9 +156,8 @@ Widget _buildPeluquerosCard(
                     icon: const Icon(Icons.edit_note_outlined),
                     alignment: Alignment.bottomRight,
                     onPressed: () {
-                      peluquerosServices.peluqueroSeleccionado = peluquero;
-                      serviciosServices.deleteServiciosSeleccionados(peluquero);
-                      Navigator.pushNamed(context, 'editarPeluquero');
+                      novedadesServices.novedadSeleccionada = novedad;
+                      Navigator.pushNamed(context, 'editarNovedades');
                     },
                     color: AppTheme.primary,
                   ),
@@ -175,14 +169,14 @@ Widget _buildPeluquerosCard(
       ),
       Align(
         alignment: Alignment.topCenter,
-        child: peluquero.imagen == null
+        child: novedad.imagen == null
             ? CircleAvatar(
                 maxRadius: 80,
-                backgroundImage: AssetImage('assets/salon.jpg'),
+                backgroundImage: AssetImage('asset/no-image.jpg'),
               )
             : CircleAvatar(
                 maxRadius: 80,
-                backgroundImage: NetworkImage(peluquero.imagen!),
+                backgroundImage: NetworkImage(novedad.imagen!),
               ),
       )
     ],

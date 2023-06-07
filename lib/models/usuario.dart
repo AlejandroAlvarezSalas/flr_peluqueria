@@ -40,7 +40,7 @@ class Usuario {
         password: json["password"],
         telefono: json["telefono"],
         verificado: json["verificado"],
-        saldo: json['saldo'],
+        saldo: json["saldo"],
       );
 
   Map<String, dynamic> toMap() => {
