@@ -45,6 +45,7 @@ class ServiciosServices extends ChangeNotifier {
       if (ServiciosSeleccionados.contains(servicio)) {
         ServiciosSeleccionados.remove(servicio);
       }
+      ServiciosSeleccionados.removeWhere((serv) => serv.id == servicio.id);
     }
     notifyListeners();
   }
@@ -54,6 +55,10 @@ class ServiciosServices extends ChangeNotifier {
     peluquero.servicios.forEach((key, value) {
       value.selected = false;
     });
+  }
+
+  deleteServiciosSeleccionadosSinPeluquero() {
+    ServiciosSeleccionados.clear();
   }
 
   Future<String> crearServicio(Servicio servicio) async {

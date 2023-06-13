@@ -18,8 +18,42 @@ class ServiciosScreen extends StatelessWidget {
     //final peluqueria = peluqueriasServices.peluqueriaSeleccionada!;
     final peluquero = peluquerosServices.peluqueroSeleccionado!;
     final usuario = usuariosServices.usuarioLogin;
-    List<Servicio> serviciosDisponibles =
-        _getListServicios(peluquero, usuario!);
+
+    List<Servicio> _getListAllServicios(Peluquero peluquero) {
+      print("entro al buscar todos");
+      List<Servicio> salida = [];
+      List<Servicio> serviciosPeluquero = [];
+      peluquero.servicios.forEach((key, value) {
+        Servicio tempServicio = value;
+        tempServicio.id = key;
+      });
+      peluquero.servicios.forEach((key, value) {
+        Servicio tempServicio = value;
+        tempServicio.id = key;
+        serviciosPeluquero.add(tempServicio);
+      });
+
+      for (var servicio in serviciosServices.servicios) {
+        for (var servicioPeluquero in serviciosPeluquero) {
+          if (servicioPeluquero.id == servicio.id) {
+            servicio.selected = true;
+          }
+        }
+        salida.add(servicio);
+      }
+
+      return salida;
+    }
+
+    List<Servicio> serviciosDisponibles;
+
+    if (peluquerosServices.editandoPeluquero) {
+      serviciosDisponibles = _getListAllServicios(peluquero);
+      serviciosServices.ServiciosSeleccionados =
+          peluquero.servicios.values.toList();
+    } else {
+      serviciosDisponibles = _getListServicios(peluquero, usuario!);
+    }
 
     PageController pageController = PageController(viewportFraction: 0.75);
 
@@ -119,11 +153,26 @@ class ServiciosScreen extends StatelessWidget {
                                         child: Container(
                                           alignment: Alignment.bottomRight,
                                           child: Checkbox(
-                                              value: servicio.selected,
-                                              onChanged: ((value) =>
-                                                  (serviciosServices
-                                                      .updateServiciosSeleccionados(
-                                                          value!, servicio)))),
+                                            value: servicio.selected,
+                                            onChanged: peluquerosServices
+                                                    .editandoPeluquero
+                                                ? (value) {
+                                                    servicio.selected = value!;
+                                                    serviciosServices
+                                                        .updateServiciosSeleccionados(
+                                                            value!, servicio);
+                                                    if (peluquero.servicios
+                                                            .containsKey(
+                                                                servicio.id) &&
+                                                        !servicio.selected!) {
+                                                      peluquero.servicios
+                                                          .remove(servicio.id);
+                                                    }
+                                                  }
+                                                : ((value) => (serviciosServices
+                                                    .updateServiciosSeleccionados(
+                                                        value!, servicio))),
+                                          ),
                                         )),
                                   )
                                 ],
@@ -151,34 +200,37 @@ class ServiciosScreen extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  Container(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount:
-                                serviciosServices.ServiciosSeleccionados.length,
-                            itemBuilder: (context, index) {
-                              Servicio _servicio = serviciosServices
-                                  .ServiciosSeleccionados[index];
-                              return Container(
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.all(10),
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: Colors.black26,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                                child: Text(_servicio.nombre),
-                              );
-                            }),
-                      ],
+                  /*SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: serviciosServices
+                                  .ServiciosSeleccionados.length,
+                              itemBuilder: (context, index) {
+                                Servicio _servicio = serviciosServices
+                                    .ServiciosSeleccionados[index];
+                                return Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black26,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                  ),
+                                  child: Text(_servicio.nombre),
+                                );
+                              }),
+                        ],
+                      ),
                     ),
-                  ),
+                  ),*/
                   Expanded(
                     child: Container(
                       alignment: Alignment.bottomCenter,
@@ -187,10 +239,30 @@ class ServiciosScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(50),
                         ),
-                        onPressed: serviciosServices
-                                .ServiciosSeleccionados.isEmpty
-                            ? null
-                            : () => {Navigator.pushNamed(context, 'horario')},
+                        onPressed: peluquerosServices.editandoPeluquero
+                            ? () {
+                                Map<String, Servicio> serviciosFinales = {};
+                                for (var serv in serviciosDisponibles) {
+                                  if (serv.selected!) {
+                                    serviciosFinales[serv.id!] = serv;
+                                  }
+                                }
+
+                                peluquero.servicios = serviciosFinales;
+                                if (peluquerosServices.editandoPeluquero) {
+                                  serviciosServices
+                                      .deleteServiciosSeleccionadosSinPeluquero();
+                                } else {
+                                  serviciosServices
+                                      .deleteServiciosSeleccionados(peluquero);
+                                }
+
+                                Navigator.pop(context);
+                              }
+                            : serviciosServices.ServiciosSeleccionados.isEmpty
+                                ? null
+                                : () =>
+                                    {Navigator.pushNamed(context, 'horario')},
                         child: const Text('Siguiente',
                             style: TextStyle(fontSize: 20)),
                       ),

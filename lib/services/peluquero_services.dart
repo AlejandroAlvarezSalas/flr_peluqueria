@@ -12,6 +12,7 @@ class PeluquerosServices extends ChangeNotifier {
 
   bool isLoading = true;
   bool isSaving = false;
+  bool editandoPeluquero = false;
 
   PeluquerosServices() {
     this.loadPeluqueros();

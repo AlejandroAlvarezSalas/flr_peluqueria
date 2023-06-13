@@ -161,8 +161,9 @@ Widget _buildPeluquerosCard(
                     icon: const Icon(Icons.edit_note_outlined),
                     alignment: Alignment.bottomRight,
                     onPressed: () {
+                      peluquerosServices.editandoPeluquero = true;
                       peluquerosServices.peluqueroSeleccionado = peluquero;
-                      serviciosServices.deleteServiciosSeleccionados(peluquero);
+                      //serviciosServices.deleteServiciosSeleccionados(peluquero);
                       Navigator.pushNamed(context, 'editarPeluquero');
                     },
                     color: AppTheme.primary,

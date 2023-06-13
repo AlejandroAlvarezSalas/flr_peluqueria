@@ -80,7 +80,7 @@ class GestionServiciosScreen extends StatelessWidget {
                 Navigator.pushNamed(context, 'editarServicios');
               },
               child:
-                  const Text('Añadir novedad', style: TextStyle(fontSize: 30)),
+                  const Text('Añadir servicio', style: TextStyle(fontSize: 30)),
             ),
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pelucapp/models/models.dart';
 import 'package:pelucapp/services/peluquero_services.dart';
+import 'package:pelucapp/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -133,12 +134,13 @@ class _EditarPeluqueroScreen extends State<EditarPeluqueroScreen> {
   @override
   Widget build(BuildContext context) {
     final peluquerosServices = Provider.of<PeluquerosServices>(context);
+    final servicioServices = Provider.of<ServiciosServices>(context);
     if (peluquerosServices.peluqueroSeleccionado != null) {
       _name = peluquerosServices.peluqueroSeleccionado!.nombre;
       _atiende = peluquerosServices.peluqueroSeleccionado!.atiende;
       _telefono = peluquerosServices.peluqueroSeleccionado!.telefono;
       _horario = peluquerosServices.peluqueroSeleccionado!.horario;
-      _servicios = peluquerosServices.peluqueroSeleccionado!.servicios;
+      //_servicios = peluquerosServices.peluqueroSeleccionado!.servicios;
       _imagen = peluquerosServices.peluqueroSeleccionado!.imagen!;
       _borrado = peluquerosServices.peluqueroSeleccionado!.borrado;
     }
@@ -970,7 +972,54 @@ class _EditarPeluqueroScreen extends State<EditarPeluqueroScreen> {
                     Text("Borrado")
                   ],
                 ),
-                const SizedBox(height: 50),
+                SizedBox(height: 20.0),
+                Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      /*if (peluquerosServices.peluqueroSeleccionado == null) {
+                        peluquerosServices.peluqueroSeleccionado =
+                            new Peluquero(
+                                atiende: 'hombre',
+                                horario: {'p': true},
+                                nombre: 'default',
+                                servicios: {
+                                  'a': new Servicio(
+                                      descripcion: 'descripcion',
+                                      destinado: 'destinado',
+                                      nombre: 'nombre',
+                                      precio: 0,
+                                      tiempo: 0,
+                                      borrado: false)
+                                },
+                                imagen: '',
+                                telefono: 000000000);
+                      }*/
+
+                      /*peluquerosServices.peluqueroSeleccionado!.atiende =
+                          _atiende;
+                      peluquerosServices.peluqueroSeleccionado!.borrado =
+                          _borrado;
+                      peluquerosServices.peluqueroSeleccionado!.imagen =
+                          _imagen;
+                      peluquerosServices.peluqueroSeleccionado!.nombre = _name;
+                      peluquerosServices.peluqueroSeleccionado!.telefono =
+                          _telefono;*/
+
+                      /*peluquerosServices.peluqueros
+                          .add(peluquerosServices.peluqueroSeleccionado!);*/
+                      /*peluquerosServices.peluqueroSeleccionado!.horario =*/
+                      print("guardo");
+                      /*await peluquerosServices.guardarOCrearPeluquero(
+                          peluquerosServices.peluqueroSeleccionado!);*/
+                      //await peluquerosServices.loadPeluqueros();
+                      Navigator.pushNamed(context, 'servicios');
+                    },
+                    child: const Text('Editar servicios',
+                        style: TextStyle(fontSize: 20)),
+                  ),
+                ),
+                const SizedBox(height: 150),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: ElevatedButton(
@@ -1003,6 +1052,16 @@ class _EditarPeluqueroScreen extends State<EditarPeluqueroScreen> {
                       peluquerosServices.peluqueroSeleccionado!.nombre = _name;
                       peluquerosServices.peluqueroSeleccionado!.telefono =
                           _telefono;
+
+                      /*Map<String, Servicio> serviciosFinales = {};
+                      for (var serv
+                          in servicioServices.ServiciosSeleccionados) {
+                        serviciosFinales[serv.id!] = serv;
+                      }
+
+                      peluquerosServices.peluqueroSeleccionado!.servicios =
+                          serviciosFinales;*/
+
                       /*peluquerosServices.peluqueros
                           .add(peluquerosServices.peluqueroSeleccionado!);*/
                       /*peluquerosServices.peluqueroSeleccionado!.horario =*/
@@ -1010,6 +1069,8 @@ class _EditarPeluqueroScreen extends State<EditarPeluqueroScreen> {
                       await peluquerosServices.guardarOCrearPeluquero(
                           peluquerosServices.peluqueroSeleccionado!);
                       //await peluquerosServices.loadPeluqueros();
+
+                      peluquerosServices.editandoPeluquero = false;
                       Navigator.pushNamed(context, 'home');
                     },
                     child: const Text('Guardar cambios usuario',
