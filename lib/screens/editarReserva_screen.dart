@@ -31,7 +31,10 @@ class EditarReservaScreen extends StatelessWidget {
     final peluquero = peluqueroServices.peluqueroSeleccionado!;
     final serviciosSeleccionados = serviciosServices.ServiciosSeleccionados;
     final diaSeleccionado =
-        DateTime.parse(reservaServices.reservaSeleccionada!.fecha);
+        reservaServices.reservaSeleccionada!.fecha.map((strFecha) {
+      DateTime fechaParseada = DateTime.parse(strFecha);
+      return fechaParseada;
+    }).toList(); //TOCHECK
     ResumenArgs resumen = ResumenArgs.completo(
         peluqueria, peluquero, serviciosSeleccionados, diaSeleccionado);
 

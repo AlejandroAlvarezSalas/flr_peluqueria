@@ -21,8 +21,8 @@ class ResumenPedidoScreen extends StatelessWidget {
     final peluquero = peluquerosServices.peluqueroSeleccionado!;
     final serviciosSeleccionados = serviciosServices.ServiciosSeleccionados;
 
-    DateTime diaSeleccionado =
-        ModalRoute.of(context)!.settings.arguments as DateTime;
+    List<DateTime> diaSeleccionado =
+        ModalRoute.of(context)!.settings.arguments as List<DateTime>;
 
     ResumenArgs resumen = ResumenArgs.completo(
         peluqueria, peluquero, serviciosSeleccionados, diaSeleccionado);
@@ -190,7 +190,7 @@ class _SubtotalContainer extends StatelessWidget {
                 color: Color.fromRGBO(97, 97, 97, 1),
               ),
               SmallText(
-                text: DateFormat('dd/MM/yyyy').format(resumen.hora),
+                text: DateFormat('dd/MM/yyyy').format(resumen.hora.first),
                 color: Color.fromRGBO(97, 97, 97, 1),
               ),
             ],
@@ -206,7 +206,7 @@ class _SubtotalContainer extends StatelessWidget {
                 color: Color.fromRGBO(97, 97, 97, 1),
               ),
               SmallText(
-                text: DateFormat('HH:mm').format(resumen.hora),
+                text: DateFormat('HH:mm').format(resumen.hora.first),
                 color: Color.fromRGBO(97, 97, 97, 1),
               ),
             ],
@@ -309,7 +309,7 @@ class ResumenArgs {
   final Peluqueria peluqueria;
   final Peluquero peluquero;
   final List<Servicio> servicios;
-  DateTime hora = DateTime.now();
+  List<DateTime> hora = [DateTime.now()];
 
   ResumenArgs.sinFecha(this.peluqueria, this.peluquero, this.servicios);
   ResumenArgs.completo(
@@ -377,7 +377,7 @@ class _MetodosDePago extends State<MetodosDePago> {
   String generarCodigo(ResumenArgs resumen) {
     String resultadoCadena = resumen.peluqueria.toString();
     resultadoCadena += resumen.peluquero.toString();
-    resultadoCadena += DateFormat('ddMMyy').format(resumen.hora);
+    resultadoCadena += DateFormat('ddMMyy').format(resumen.hora.first);
     //si lo hago como int me quita los primeros digitos si estos son 0
     return resultadoCadena;
   }

@@ -31,8 +31,14 @@ class MetodosDePagoScreen extends StatelessWidget {
       );
     }
 
+    /*Map<int, String> fecha = resumen.hora
+        .asMap()
+        .map((index, dateTime) => MapEntry(index, dateTime.toString()));*/
+    List<String> fecha =
+        resumen.hora.map((dateTime) => dateTime.toString()).toList();
+
     Reserva reserva = new Reserva(
-        fecha: resumen.hora.toString(),
+        fecha: fecha,
         pago: "",
         peluquero: resumen.peluquero.id!,
         peluqueria: resumen.peluqueria.nif!,
@@ -174,7 +180,7 @@ class MetodosDePagoScreen extends StatelessWidget {
 String generarCodigo(ResumenArgs resumen) {
   String? resultadoCadena = resumen.peluqueria.nif!.substring(0, 3);
   resultadoCadena += resumen.peluquero.id!;
-  resultadoCadena += DateFormat('ddMMyy').format(resumen.hora);
+  resultadoCadena += DateFormat('ddMMyy').format(resumen.hora.first);
   //si lo hago como int me quita los primeros digitos si estos son 0
   return resultadoCadena;
 }

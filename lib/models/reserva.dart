@@ -17,7 +17,7 @@ class Reserva {
       this.pagada = false,
       this.telefonica = false});
   String? id;
-  String fecha;
+  List<String> fecha;
   String pago;
   String peluquero;
   String peluqueria;
@@ -33,7 +33,7 @@ class Reserva {
   String toJson() => json.encode(toMap());
 
   factory Reserva.fromMap(Map<String, dynamic> json) => Reserva(
-        fecha: json['fecha'],
+        fecha: List<String>.from(json['fecha'].map((x) => x.toString())),
         pago: json['pago'],
         codigoBizum: json['CodigoBizum'],
         peluquero: json['peluquero'],

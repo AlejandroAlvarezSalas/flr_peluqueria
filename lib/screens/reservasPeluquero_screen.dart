@@ -198,7 +198,8 @@ class _ReservasPeluqueroScreen extends State<ReservasPeluqueroScreen> {
 
     int sumaTiempo = serviciosCita.fold<int>(
         0, (previousValue, servicio) => previousValue + servicio.tiempo);
-    String portada = usuarioCita.nombre + ': ' + reserva.fecha;
+    String portada =
+        usuarioCita.nombre + ': ' + reserva.fecha /*.values.toList()*/ .first;
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(

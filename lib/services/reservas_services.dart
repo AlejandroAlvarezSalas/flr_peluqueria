@@ -7,8 +7,13 @@ class ReservaServices extends ChangeNotifier {
   final String _baseURL =
       "recuperacion-flutter-93b2a-default-rtdb.europe-west1.firebasedatabase.app";
   final List<Reserva> reservas = [];
+  Map<int, String> fecha = {
+    0: '2000-00-00 00:00:00.000',
+  };
   Reserva? reservaSeleccionada = Reserva(
-      fecha: '',
+      fecha: [
+        '2000-01-01 00:00:00.000',
+      ],
       pago: '',
       peluquero: '',
       peluqueria: '',
