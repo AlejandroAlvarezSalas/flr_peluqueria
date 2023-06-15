@@ -116,27 +116,29 @@ class _EditarNovedadesScreen extends State<EditarNovedadesScreen> {
                   height: 20,
                 ),
                 SizedBox(height: 20.0),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _borrado,
-                      onChanged: (value) {
-                        print(_borrado);
-                        _borrado = !_borrado;
-                        if (novedadesServices.novedadSeleccionada != null)
-                          novedadesServices.novedadSeleccionada!.borrado =
-                              _borrado;
-                        setState(() {
-                          /*peluquerosServices.peluqueroSeleccionado!.borrado =
+                !novedadesServices.creandoNovedad
+                    ? Row(
+                        children: [
+                          Checkbox(
+                            value: _borrado,
+                            onChanged: (value) {
+                              print(_borrado);
+                              _borrado = !_borrado;
+                              if (novedadesServices.novedadSeleccionada != null)
+                                novedadesServices.novedadSeleccionada!.borrado =
+                                    _borrado;
+                              setState(() {
+                                /*peluquerosServices.peluqueroSeleccionado!.borrado =
                               value;*/
 
-                          //_borrado = value!;
-                        });
-                      },
-                    ),
-                    Text("Borrado")
-                  ],
-                ),
+                                //_borrado = value!;
+                              });
+                            },
+                          ),
+                          Text("Borrado")
+                        ],
+                      )
+                    : SizedBox(),
                 const SizedBox(height: 50),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
@@ -154,6 +156,7 @@ class _EditarNovedadesScreen extends State<EditarNovedadesScreen> {
                       novedadesServices.novedadSeleccionada!.imagen = _imagen;
                       novedadesServices.novedadSeleccionada!.descripcion =
                           _descripcion;
+                      novedadesServices.creandoNovedad = false;
                       print("guardo");
                       await novedadesServices.guardarOCrearNovedad(
                           novedadesServices.novedadSeleccionada!);

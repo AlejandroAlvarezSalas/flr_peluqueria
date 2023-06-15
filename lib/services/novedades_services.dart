@@ -11,6 +11,7 @@ class NovedadesServices extends ChangeNotifier {
   Novedad? novedadSeleccionada;
   bool isLoading = true;
   bool isSaving = false;
+  bool creandoNovedad = false;
 
   NovedadesServices() {
     loadNovedades();

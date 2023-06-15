@@ -185,27 +185,30 @@ class _EditarServiciosScreen extends State<EditarServiciosScreen> {
                 ),
                 SizedBox(height: 20.0),
                 SizedBox(height: 20.0),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _borrado,
-                      onChanged: (value) {
-                        print(_borrado);
-                        _borrado = !_borrado;
-                        if (serviciosServices.servicioSeleccionado != null)
-                          serviciosServices.servicioSeleccionado!.borrado =
-                              _borrado;
-                        setState(() {
-                          /*peluquerosServices.peluqueroSeleccionado!.borrado =
+                !serviciosServices.creandoServicio
+                    ? Row(
+                        children: [
+                          Checkbox(
+                            value: _borrado,
+                            onChanged: (value) {
+                              print(_borrado);
+                              _borrado = !_borrado;
+                              if (serviciosServices.servicioSeleccionado !=
+                                  null)
+                                serviciosServices
+                                    .servicioSeleccionado!.borrado = _borrado;
+                              setState(() {
+                                /*peluquerosServices.peluqueroSeleccionado!.borrado =
                               value;*/
 
-                          //_borrado = value!;
-                        });
-                      },
-                    ),
-                    Text("Borrado")
-                  ],
-                ),
+                                //_borrado = value!;
+                              });
+                            },
+                          ),
+                          Text("Borrado")
+                        ],
+                      )
+                    : SizedBox(),
                 const SizedBox(height: 50),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
@@ -231,6 +234,8 @@ class _EditarServiciosScreen extends State<EditarServiciosScreen> {
                           _destinado;
                       serviciosServices.servicioSeleccionado!.precio = _precio;
                       serviciosServices.servicioSeleccionado!.tiempo = _tiempo;
+
+                      serviciosServices.creandoServicio = false;
 
                       print("guardo");
                       await serviciosServices.guardarOCrearServicio(

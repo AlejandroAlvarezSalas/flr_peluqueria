@@ -12,6 +12,7 @@ class ServiciosServices extends ChangeNotifier {
   List<Servicio> ServiciosSeleccionados = [];
   bool isLoading = true;
   bool isSaving = false;
+  bool creandoServicio = false;
 
   ServiciosServices() {
     loadServicios();

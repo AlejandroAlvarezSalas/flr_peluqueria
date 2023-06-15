@@ -951,27 +951,30 @@ class _EditarPeluqueroScreen extends State<EditarPeluqueroScreen> {
                   },
                 ),
                 SizedBox(height: 20.0),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _borrado,
-                      onChanged: (value) {
-                        print(_borrado);
-                        _borrado = !_borrado;
-                        if (peluquerosServices.peluqueroSeleccionado != null)
-                          peluquerosServices.peluqueroSeleccionado!.borrado =
-                              _borrado;
-                        setState(() {
-                          /*peluquerosServices.peluqueroSeleccionado!.borrado =
+                !peluquerosServices.creandoPeluquero
+                    ? Row(
+                        children: [
+                          Checkbox(
+                            value: _borrado,
+                            onChanged: (value) {
+                              print(_borrado);
+                              _borrado = !_borrado;
+                              if (peluquerosServices.peluqueroSeleccionado !=
+                                  null)
+                                peluquerosServices
+                                    .peluqueroSeleccionado!.borrado = _borrado;
+                              setState(() {
+                                /*peluquerosServices.peluqueroSeleccionado!.borrado =
                               value;*/
 
-                          //_borrado = value!;
-                        });
-                      },
-                    ),
-                    Text("Borrado")
-                  ],
-                ),
+                                //_borrado = value!;
+                              });
+                            },
+                          ),
+                          Text("Borrado")
+                        ],
+                      )
+                    : SizedBox(),
                 SizedBox(height: 20.0),
                 Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
@@ -1069,7 +1072,7 @@ class _EditarPeluqueroScreen extends State<EditarPeluqueroScreen> {
                       await peluquerosServices.guardarOCrearPeluquero(
                           peluquerosServices.peluqueroSeleccionado!);
                       //await peluquerosServices.loadPeluqueros();
-
+                      peluquerosServices.creandoPeluquero = false;
                       peluquerosServices.editandoPeluquero = false;
                       Navigator.pushNamed(context, 'home');
                     },

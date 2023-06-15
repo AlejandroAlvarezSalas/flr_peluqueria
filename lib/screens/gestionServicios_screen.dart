@@ -76,6 +76,7 @@ class GestionServiciosScreen extends StatelessWidget {
                     Navigator.pushNamed(context, 'home');
                   },*/
                   () {
+                serviciosServices.creandoServicio = true;
                 serviciosServices.servicioSeleccionado = null;
                 Navigator.pushNamed(context, 'editarServicios');
               },

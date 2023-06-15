@@ -77,6 +77,7 @@ class GestionNovedadesScreen extends StatelessWidget {
                   },*/
                   () {
                 novedadesServices.novedadSeleccionada = null;
+                novedadesServices.creandoNovedad = true;
                 Navigator.pushNamed(context, 'editarNovedades');
               },
               child:

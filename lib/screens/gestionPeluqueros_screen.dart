@@ -76,6 +76,7 @@ class GestionPeluquerosScreen extends StatelessWidget {
                     Navigator.pushNamed(context, 'home');
                   },*/
                   () {
+                peluquerosServices.creandoPeluquero = true;
                 peluquerosServices.peluqueroSeleccionado = null;
                 Navigator.pushNamed(context, 'editarPeluquero');
               },
