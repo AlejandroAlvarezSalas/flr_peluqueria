@@ -116,7 +116,7 @@ class PasarelaDePagoScreen extends StatelessWidget {
                       .guardarOCrearReserva(reserva)) {
                     Navigator.pushNamed(context, 'recargaReservas');
                   }*/
-                  await reservaServices.reloadReserva();
+                  reservaServices.reloadReserva();
                   Navigator.pushNamed(context, 'home');
                   /*Navigator.pushNamed(context, 'recargaReservas');*/
                 }

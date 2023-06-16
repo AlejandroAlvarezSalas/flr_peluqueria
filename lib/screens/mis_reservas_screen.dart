@@ -99,6 +99,7 @@ class _MisReservasScreenState extends State<MisReservasScreen>
                   child: Column(
                     children: [
                       buildImage(peluqueria.imagen!),
+                      //Text(reservas[index].id!),
                       buildText(context, reservas[index]),
                     ],
                   ),
@@ -183,11 +184,12 @@ class _MisReservasScreenState extends State<MisReservasScreen>
                   usuariosServices.usuarioLogin!.saldo =
                       usuariosServices.usuarioLogin!.saldo ??
                           0 + sumaPrecios as double;
-                  await usuariosServices
+                  usuariosServices
                       .guardarOCrearUsuario(usuariosServices.usuarioLogin!);
                 }
                 await reservaServices.cancelarReserva(reserva);
-                await reservaServices.reloadReserva();
+                print("hola");
+                reservaServices.reloadReserva();
                 Navigator.pushNamed(context, 'home');
                 //seleccionado = true;
               },

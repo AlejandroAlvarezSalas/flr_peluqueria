@@ -99,7 +99,8 @@ class EditarReservaScreen extends StatelessWidget {
             onTap: () async {
               await reservaServices
                   .cancelarReserva(reservaServices.reservaSeleccionada!);
-              await reservaServices.reloadReserva();
+              print("hola desde el otro");
+              reservaServices.reloadReserva();
               Navigator.pushNamed(context, 'home');
             },
           )

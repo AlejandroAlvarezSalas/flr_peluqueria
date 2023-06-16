@@ -101,7 +101,7 @@ class MetodosDePagoScreen extends StatelessWidget {
                                         .guardarOCrearReserva(reserva)) {
                                       Navigator.pushNamed(context, 'recargaReservas');
                                     }*/
-                                    await reservaServices.reloadReserva();
+                                    reservaServices.reloadReserva();
                                     Navigator.pushNamed(context, 'home');
                                     /*Navigator.pushNamed(
                                         context, 'recargaReservas');*/
@@ -165,7 +165,7 @@ class MetodosDePagoScreen extends StatelessWidget {
                                         .guardarOCrearReserva(reserva)) {
                                       Navigator.pushNamed(context, 'recargaReservas');
                                     }*/
-                                    await reservaServices.reloadReserva();
+                                    reservaServices.reloadReserva();
                                     Navigator.pushNamed(context, 'home');
                                     /*Navigator.pushNamed(
                                         context, 'recargaReservas');*/
