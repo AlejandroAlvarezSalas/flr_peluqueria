@@ -87,17 +87,19 @@ class EditarReservaScreen extends StatelessWidget {
           ListTile(
               title: Text('Cambiar estado del pago'),
               trailing: Icon(Icons.arrow_forward),
-              onTap: () {
+              onTap: () async {
                 reservaServices.alternarPagadaReserva(
                     reservaServices.reservaSeleccionada!);
+                await reservaServices.reloadReserva();
                 Navigator.pushNamed(context, 'home');
               }),
           ListTile(
             title: Text('Cancelar cita'),
             trailing: Icon(Icons.arrow_forward),
-            onTap: () {
+            onTap: () async {
               reservaServices
                   .cancelarReserva(reservaServices.reservaSeleccionada!);
+              await reservaServices.reloadReserva();
               Navigator.pushNamed(context, 'home');
             },
           )

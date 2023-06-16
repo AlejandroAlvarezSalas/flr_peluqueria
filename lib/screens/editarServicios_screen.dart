@@ -35,6 +35,8 @@ class _EditarServiciosScreen extends State<EditarServiciosScreen> {
   @override
   Widget build(BuildContext context) {
     final serviciosServices = Provider.of<ServiciosServices>(context);
+    final peluqueroServices = Provider.of<PeluquerosServices>(context);
+
     if (serviciosServices.servicioSeleccionado != null) {
       _nombre = serviciosServices.servicioSeleccionado!.nombre;
       _descripcion = serviciosServices.servicioSeleccionado!.descripcion;
@@ -237,12 +239,40 @@ class _EditarServiciosScreen extends State<EditarServiciosScreen> {
 
                       serviciosServices.creandoServicio = false;
 
+                      print("actualizo servicios de peluqueros");
+
+                      if (serviciosServices.servicioSeleccionado!.borrado) {
+                        for (var peluquero in peluqueroServices.peluqueros) {
+                          peluquero.servicios.remove(
+                              serviciosServices.servicioSeleccionado!.id);
+                          peluqueroServices.guardarOCrearPeluquero(peluquero);
+                        }
+                      } else {
+                        for (var peluquero in peluqueroServices.peluqueros) {
+                          if (peluquero.servicios.containsKey(
+                              serviciosServices.servicioSeleccionado!.id)) {
+                            peluquero.servicios[serviciosServices
+                                .servicioSeleccionado!
+                                .id!] = serviciosServices.servicioSeleccionado!;
+                          }
+                          peluqueroServices.guardarOCrearPeluquero(peluquero);
+                        }
+                      }
+
                       print("guardo");
                       await serviciosServices.guardarOCrearServicio(
                           serviciosServices.servicioSeleccionado!);
+                      await serviciosServices.reloadServicios();
                       Navigator.pushNamed(context, 'home');
+                      /*if (await serviciosServices.guardarOCrearServicio(
+                          serviciosServices.servicioSeleccionado!)) {
+                        Navigator.pushNamed(context, 'recargaServicios');
+                      } else {
+                        //Navigator.pushNamed(context, 'home');
+                        Navigator.pushNamed(context, 'recargaServicios');
+                      }*/
                     },
-                    child: const Text('Guardar cambios usuario',
+                    child: const Text('Guardar cambios servicio',
                         style: TextStyle(fontSize: 20)),
                   ),
                 ),

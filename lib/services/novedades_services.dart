@@ -12,6 +12,7 @@ class NovedadesServices extends ChangeNotifier {
   bool isLoading = true;
   bool isSaving = false;
   bool creandoNovedad = false;
+  bool isReloading = false;
 
   NovedadesServices() {
     loadNovedades();
@@ -39,7 +40,25 @@ class NovedadesServices extends ChangeNotifier {
     return novedades;
   }
 
-  Future<String> crearNovedad(Novedad novedad) async {
+  Future reloadNovedades() async {
+    novedades.clear();
+
+    final url = Uri.https(_baseURL, 'Novedades.json');
+    final resp = await http.get(url);
+
+    final Map<String, dynamic> novedadesMap = json.decode(resp.body);
+
+    novedadesMap.forEach((key, value) {
+      final tempNovedad = Novedad.fromMap(value);
+      tempNovedad.id = key;
+      novedades.add(tempNovedad);
+    });
+
+    isReloading = false;
+    notifyListeners();
+  }
+
+  Future crearNovedad(Novedad novedad) async {
     // Conectamos a la base de datos
     final url = Uri.https(_baseURL, 'Novedades.json');
     // Queremos meter nuevo usuario, cambiamos el http.get a post
@@ -49,12 +68,12 @@ class NovedadesServices extends ChangeNotifier {
     //usuario.id = decodedData['nombre'];
 
     // ID con nuestro formato:
-    int tamano = novedades.length + 2;
-    novedad.id = "NVD00" + tamano.toString();
+    /*int tamano = novedades.length + 2;
+    novedad.id = "NVD00" + tamano.toString();*/
 
-    novedades.add(novedad);
+    //novedades.add(novedad);
 
-    return novedad.id!;
+    isReloading = true;
   }
 
   updateNovedad(Novedad novedad) async {
@@ -65,7 +84,7 @@ class NovedadesServices extends ChangeNotifier {
     //return usuario.id!;
   }
 
-  Future guardarOCrearNovedad(Novedad novedad) async {
+  Future<bool> guardarOCrearNovedad(Novedad novedad) async {
     isSaving = true;
     notifyListeners();
     print(novedad.titulo);
@@ -81,5 +100,6 @@ class NovedadesServices extends ChangeNotifier {
 
     isSaving = false;
     notifyListeners();
+    return isReloading;
   }
 }

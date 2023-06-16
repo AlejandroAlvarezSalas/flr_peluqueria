@@ -70,6 +70,10 @@ class MyApp extends StatelessWidget {
         'editarReserva': (context) => EditarReservaScreen(),
         'datosCita': (context) => DatosCitaScreen(),
         'pantallaIntermedia': (context) => PantallaIntermediaSreen(),
+        'recargaPeluqueros': (context) => RecargaPeluquerosScreen(),
+        'recargaNovedades': (context) => RecargaNovedadesScreen(),
+        'recargaReservas': (context) => RecargaReservasScreen(),
+        'recargaServicios': (context) => RecargaServiciosScreen(),
       },
     );
   }

@@ -81,7 +81,7 @@ class _ReservasPeluqueroScreen extends State<ReservasPeluqueroScreen> {
             usuario
                 .telefono); //uso el numero de telefono como identificador de los peluqueros
     List<Reserva> reservas = obtenerReservasPeluquero(peluquero.id.toString());
-
+    reservas.sort((a, b) => a.fecha.first.compareTo(b.fecha.first));
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

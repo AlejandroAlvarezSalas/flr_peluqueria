@@ -1074,9 +1074,17 @@ class _EditarPeluqueroScreen extends State<EditarPeluqueroScreen> {
                       //await peluquerosServices.loadPeluqueros();
                       peluquerosServices.creandoPeluquero = false;
                       peluquerosServices.editandoPeluquero = false;
+                      await peluquerosServices.reloadPeluqueros();
                       Navigator.pushNamed(context, 'home');
+                      /*if (await peluquerosServices.guardarOCrearPeluquero(
+                          peluquerosServices.peluqueroSeleccionado!)) {
+                        Navigator.pushNamed(context, 'recargaPeluqueros');
+                      } else {
+                        //Navigator.pushNamed(context, 'home');
+                        Navigator.pushNamed(context, 'recargaPeluqueros');
+                      }*/
                     },
-                    child: const Text('Guardar cambios usuario',
+                    child: const Text('Guardar cambios peluquero',
                         style: TextStyle(fontSize: 20)),
                   ),
                 ),

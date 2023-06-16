@@ -102,7 +102,7 @@ class PasarelaDePagoScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 FocusScope.of(context).requestFocus(FocusNode());
                 if (!myFormKey.currentState!.validate()) {
                   print('Credenciales incorrectas');
@@ -110,9 +110,15 @@ class PasarelaDePagoScreen extends StatelessWidget {
                 } else {
                   reserva.pago = "Tarjeta";
                   if (reservaServices.desdePeluquero) reserva.telefonica = true;
-                  reservaServices.guardarOCrearUsuario(reserva);
                   reservaServices.desdePeluquero = false;
-                  Navigator.pushNamed(context, 'pantallaIntermedia');
+                  reservaServices.guardarOCrearReserva(reserva);
+                  /*if (reservaServices
+                      .guardarOCrearReserva(reserva)) {
+                    Navigator.pushNamed(context, 'recargaReservas');
+                  }*/
+                  await reservaServices.reloadReserva();
+                  Navigator.pushNamed(context, 'home');
+                  /*Navigator.pushNamed(context, 'recargaReservas');*/
                 }
               },
               child: const Text('Pagar', style: TextStyle(fontSize: 20)),

@@ -13,6 +13,7 @@ class ServiciosServices extends ChangeNotifier {
   bool isLoading = true;
   bool isSaving = false;
   bool creandoServicio = false;
+  bool isReloading = false;
 
   ServiciosServices() {
     loadServicios();
@@ -36,6 +37,22 @@ class ServiciosServices extends ChangeNotifier {
     notifyListeners();
 
     return servicios;
+  }
+
+  Future reloadServicios() async {
+    servicios.clear();
+    final url = Uri.https(_baseURL, 'servicios.json');
+    final resp = await http.get(url);
+
+    final Map<String, dynamic> ServiciosMap = json.decode(resp.body);
+
+    ServiciosMap.forEach((key, value) {
+      final tempServicio = Servicio.fromMap(value);
+      tempServicio.id = key;
+      servicios.add(tempServicio);
+    });
+
+    isReloading = false;
   }
 
   updateServiciosSeleccionados(bool value, Servicio servicio) {
@@ -62,7 +79,7 @@ class ServiciosServices extends ChangeNotifier {
     ServiciosSeleccionados.clear();
   }
 
-  Future<String> crearServicio(Servicio servicio) async {
+  Future crearServicio(Servicio servicio) async {
     // Conectamos a la base de datos
     final url = Uri.https(_baseURL, 'servicios.json');
     // Queremos meter nuevo usuario, cambiamos el http.get a post
@@ -72,12 +89,12 @@ class ServiciosServices extends ChangeNotifier {
     //usuario.id = decodedData['nombre'];
 
     // ID con nuestro formato:
-    int tamano = servicios.length + 2;
-    servicio.id = "SER00" + tamano.toString();
+    /*int tamano = servicios.length + 2;
+    servicio.id = "SER00" + tamano.toString();*/
 
-    this.servicios.add(servicio);
+    //servicios.add(servicio);
 
-    return servicio.id!;
+    isReloading = true;
   }
 
   Future<String> updateServicio(Servicio servicio) async {
@@ -88,7 +105,7 @@ class ServiciosServices extends ChangeNotifier {
     return servicio.id!;
   }
 
-  Future guardarOCrearServicio(Servicio servicio) async {
+  Future<bool> guardarOCrearServicio(Servicio servicio) async {
     isSaving = true;
     notifyListeners();
     print(servicio.id);
@@ -104,5 +121,6 @@ class ServiciosServices extends ChangeNotifier {
 
     isSaving = false;
     notifyListeners();
+    return isReloading;
   }
 }

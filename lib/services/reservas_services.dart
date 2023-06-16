@@ -23,6 +23,7 @@ class ReservaServices extends ChangeNotifier {
   bool isLoading = true;
   bool desdePeluquero = false;
   String datosUsuario = "default";
+  bool isReloading = false;
 
   ReservaServices() {
     this.loadReserva();
@@ -56,19 +57,46 @@ class ReservaServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future reloadReserva() async {
+    reservas.clear();
+
+    final url = Uri.https(_baseURL, 'reserva.json');
+    final resp = await http.get(url);
+
+    print("hola, he pasado del await");
+    print(resp.body);
+
+    final Map<String, dynamic> reservaMap = json.decode(resp.body);
+
+    reservaMap.forEach((key, value) {
+      final tempReserva = Reserva.fromMap(value);
+      tempReserva.id = key;
+      print('listo reserva:');
+      print('id: ${tempReserva.id}, fecha:${tempReserva.fecha}');
+      print('pago: ${tempReserva.pago}, peluqueria:${tempReserva.peluqueria}');
+      print(
+          'peluquero: ${tempReserva.peluquero}, usuario:${tempReserva.usuario}');
+      print(
+          'servicios: ${tempReserva.servicios.toString()}, cancelada: ${tempReserva.cancelada}');
+      reservas.add(tempReserva);
+    });
+    isReloading = false;
+  }
+
   Future create(Reserva reserva) async {
-    int tamano = reservas.length + 2;
+    /*int tamano = reservas.length + 2;
     reserva.id = "RSV00" + tamano.toString();
     if (desdePeluquero) {
       reserva.id = "manual";
-    }
+    }*/
     final url = Uri.https(_baseURL, 'reserva.json');
     await http.post(url, body: reserva.toJson());
 
     /*int tamano = reservas.length + 2;
     reserva.id = "RSV00" + tamano.toString();
 */
-    reservas.add(reserva);
+    //reservas.add(reserva);
+    isReloading = true;
   }
 
   Future update(Reserva reserva) async {
@@ -77,7 +105,7 @@ class ReservaServices extends ChangeNotifier {
     final decodedData = resp.body;
   }
 
-  Future guardarOCrearUsuario(Reserva reserva) async {
+  Future<bool> guardarOCrearReserva(Reserva reserva) async {
     if (reserva.id == null) {
       // Crear
       await this.create(reserva);
@@ -85,6 +113,7 @@ class ReservaServices extends ChangeNotifier {
       // Actualizar
       await this.update(reserva);
     }
+    return isReloading;
   }
 
   Future cancelarReserva(Reserva reserva) async {

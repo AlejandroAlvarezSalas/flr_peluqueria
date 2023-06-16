@@ -160,9 +160,17 @@ class _EditarNovedadesScreen extends State<EditarNovedadesScreen> {
                       print("guardo");
                       await novedadesServices.guardarOCrearNovedad(
                           novedadesServices.novedadSeleccionada!);
+                      novedadesServices.reloadNovedades();
                       Navigator.pushNamed(context, 'home');
+                      /*if (await novedadesServices.guardarOCrearNovedad(
+                          novedadesServices.novedadSeleccionada!)) {
+                        Navigator.pushNamed(context, 'recargaNovedades');
+                      } else {
+                        //Navigator.pushNamed(context, 'home');
+                        Navigator.pushNamed(context, 'recargaNovedades');
+                      }*/
                     },
-                    child: const Text('Guardar cambios usuario',
+                    child: const Text('Guardar cambios novedad',
                         style: TextStyle(fontSize: 20)),
                   ),
                 ),

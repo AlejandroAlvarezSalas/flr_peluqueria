@@ -41,6 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<PeluquerosServices>(context);
     final UsuariosServices usuariosServices =
         Provider.of<UsuariosServices>(context);
+    final ReservaServices reservaServices =
+        Provider.of<ReservaServices>(context);
 
     checkPeluquero() {
       for (var pel in peluqueroServices.peluqueros) {

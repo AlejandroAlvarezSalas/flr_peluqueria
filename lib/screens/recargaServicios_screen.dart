@@ -9,28 +9,13 @@ import 'package:pelucapp/services/services.dart';
 import 'package:pelucapp/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 
-class PantallaIntermediaSreen extends StatelessWidget {
-  const PantallaIntermediaSreen({super.key});
+class RecargaServiciosScreen extends StatelessWidget {
+  const RecargaServiciosScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final PeluquerosServices peluqueroServices =
-        Provider.of<PeluquerosServices>(context);
-
-    final NovedadesServices novedadesServices =
-        Provider.of<NovedadesServices>(context);
-
     final ServiciosServices serviciosServices =
         Provider.of<ServiciosServices>(context);
-
-    final ReservaServices reservaServices =
-        Provider.of<ReservaServices>(context);
-
-    peluqueroServices.reloadPeluqueros();
-
-    reservaServices.reloadReserva();
-
-    novedadesServices.reloadNovedades();
 
     serviciosServices.reloadServicios();
 

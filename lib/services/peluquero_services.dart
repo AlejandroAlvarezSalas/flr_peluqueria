@@ -14,6 +14,7 @@ class PeluquerosServices extends ChangeNotifier {
   bool isSaving = false;
   bool editandoPeluquero = false;
   bool creandoPeluquero = false;
+  bool isReloading = false;
 
   PeluquerosServices() {
     this.loadPeluqueros();
@@ -32,7 +33,24 @@ class PeluquerosServices extends ChangeNotifier {
     });
   }
 
-  Future<String> crearPeluquero(Peluquero peluquero) async {
+  Future reloadPeluqueros() async {
+    peluqueros.clear();
+
+    final url = Uri.https(_baseURL, 'peluqueros.json');
+    final resp = await http.get(url);
+
+    final Map<String, dynamic> peluquerosMap = json.decode(resp.body);
+
+    peluquerosMap.forEach((key, value) {
+      final tempPeluquero = Peluquero.fromMap(value);
+      tempPeluquero.id = key;
+      peluqueros.add(tempPeluquero);
+    });
+
+    isReloading = false;
+  }
+
+  Future crearPeluquero(Peluquero peluquero) async {
     // Conectamos a la base de datos
     final url = Uri.https(_baseURL, 'peluqueros.json');
     // Queremos meter nuevo usuario, cambiamos el http.get a post
@@ -42,12 +60,11 @@ class PeluquerosServices extends ChangeNotifier {
     //usuario.id = decodedData['nombre'];
 
     // ID con nuestro formato:
-    int tamano = peluqueros.length + 2;
-    peluquero.id = "PEL00" + tamano.toString();
+    /*int tamano = peluqueros.length + 2;
+    peluquero.id = "PEL00" + tamano.toString();*/
 
-    this.peluqueros.add(peluquero);
-
-    return peluquero.id!;
+    //peluqueros.add(peluquero);
+    isReloading = true;
   }
 
   Future<String> updatePeluquero(Peluquero peluquero) async {
@@ -58,7 +75,7 @@ class PeluquerosServices extends ChangeNotifier {
     return peluquero.id!;
   }
 
-  Future guardarOCrearPeluquero(Peluquero peluquero) async {
+  Future<bool> guardarOCrearPeluquero(Peluquero peluquero) async {
     isSaving = true;
     notifyListeners();
     print(peluquero.id);
@@ -74,5 +91,6 @@ class PeluquerosServices extends ChangeNotifier {
 
     isSaving = false;
     notifyListeners();
+    return isReloading;
   }
 }

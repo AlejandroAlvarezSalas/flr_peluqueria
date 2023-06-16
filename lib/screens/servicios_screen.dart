@@ -34,12 +34,14 @@ class ServiciosScreen extends StatelessWidget {
       });
 
       for (var servicio in serviciosServices.servicios) {
-        for (var servicioPeluquero in serviciosPeluquero) {
-          if (servicioPeluquero.id == servicio.id) {
-            servicio.selected = true;
+        if (!servicio.borrado) {
+          for (var servicioPeluquero in serviciosPeluquero) {
+            if (servicioPeluquero.id == servicio.id) {
+              servicio.selected = true;
+            }
           }
+          salida.add(servicio);
         }
-        salida.add(servicio);
       }
 
       return salida;
@@ -56,15 +58,19 @@ class ServiciosScreen extends StatelessWidget {
     }
 
     PageController pageController = PageController(viewportFraction: 0.75);
-
+//peluquerosServices.editandoPeluquero
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back_ios_new, color: AppTheme.mainTextColor),
-          ),
+          automaticallyImplyLeading: !peluquerosServices.editandoPeluquero,
+          leading: peluquerosServices.editandoPeluquero
+              ? null
+              : IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back_ios_new,
+                      color: AppTheme.mainTextColor),
+                ),
           title: BigText(
             text: 'PELUCAPP',
             color: AppTheme.primary,
@@ -285,20 +291,20 @@ List<Servicio> _getListServicios(Peluquero peluquero, Usuario usuario) {
     String generoUsuario = usuario.genero;
     print(
         'Servicio destinado = ${servicioDestinado}, Genero usuario = ${generoUsuario}, iguales = ${generoUsuario == servicioDestinado}');
-    if (servicioDestinado == generoUsuario) {
+    if (/*servicioDestinado == generoUsuario &&*/ !tempServicio.borrado) {
       salida.add(tempServicio);
     }
   });
-  peluquero.servicios.forEach((key, value) {
+  /*peluquero.servicios.forEach((key, value) {
     Servicio tempServicio = value;
     tempServicio.id = key;
     String servicioDestinado = tempServicio.destinado;
     String generoUsuario = usuario.genero;
     print(
         'Servicio destinado = ${servicioDestinado}, Genero usuario = ${generoUsuario}, iguales = ${generoUsuario == servicioDestinado}');
-    if (servicioDestinado != generoUsuario) {
+    if (servicioDestinado != generoUsuario && !tempServicio.borrado) {
       salida.add(tempServicio);
     }
-  });
+  });*/
   return salida;
 }

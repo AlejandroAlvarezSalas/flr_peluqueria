@@ -29,3 +29,7 @@ export 'package:pelucapp/screens/reservasPeluquero_screen.dart';
 export 'package:pelucapp/screens/editarReserva_screen.dart';
 export 'package:pelucapp/screens/datosCita_screen.dart';
 export 'package:pelucapp/screens/pantallaIntermedia_screen.dart';
+export 'package:pelucapp/screens/recargaNovedades_screen.dart';
+export 'package:pelucapp/screens/recargaPeluqueros_screen.dart';
+export 'package:pelucapp/screens/recargaReservas_screen.dart';
+export 'package:pelucapp/screens/recargaServicios_screen.dart';

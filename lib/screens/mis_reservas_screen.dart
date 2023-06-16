@@ -66,7 +66,7 @@ class _MisReservasScreenState extends State<MisReservasScreen>
     final Usuario usuario = usuariosServices.usuarioLogin!;
 
     List<Reserva> reservas = obtenerReservasUsuario(usuario.id.toString());
-
+    reservas.sort((a, b) => a.fecha.first.compareTo(b.fecha.first));
     return Scaffold(
       body: ListView.builder(
         itemCount: reservas.length /*peluqueriasServices.peluquerias.length*/,
@@ -177,16 +177,17 @@ class _MisReservasScreenState extends State<MisReservasScreen>
           Text('Coste total: ${sumaPrecios}'),
           Text('Tiempo total: ${sumaTiempo}'),
           ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 //meter el sueldo
                 if (reserva.pago != 'efectivo') {
                   usuariosServices.usuarioLogin!.saldo =
-                      usuariosServices.usuarioLogin!.saldo! + sumaPrecios
-                          as double;
+                      usuariosServices.usuarioLogin!.saldo ??
+                          0 + sumaPrecios as double;
                   usuariosServices
                       .updateUsuario(usuariosServices.usuarioLogin!);
                 }
                 reservaServices.cancelarReserva(reserva);
+                await reservaServices.reloadReserva();
                 Navigator.pushNamed(context, 'home');
                 //seleccionado = true;
               },

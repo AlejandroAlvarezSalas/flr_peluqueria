@@ -88,17 +88,23 @@ class MetodosDePagoScreen extends StatelessWidget {
                               content: Text(generarCodigo(resumen)),
                               actions: <Widget>[
                                 TextButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     reserva.pago = "Bizum";
                                     reserva.codigoBizum =
                                         generarCodigo(resumen);
                                     if (reservaServices.desdePeluquero)
                                       reserva.telefonica = true;
-                                    reservaServices
-                                        .guardarOCrearUsuario(reserva);
                                     reservaServices.desdePeluquero = false;
-                                    Navigator.pushNamed(
-                                        context, 'pantallaIntermedia');
+                                    reservaServices
+                                        .guardarOCrearReserva(reserva);
+                                    /*if (await reservaServices
+                                        .guardarOCrearReserva(reserva)) {
+                                      Navigator.pushNamed(context, 'recargaReservas');
+                                    }*/
+                                    await reservaServices.reloadReserva();
+                                    Navigator.pushNamed(context, 'home');
+                                    /*Navigator.pushNamed(
+                                        context, 'recargaReservas');*/
                                   },
                                   child: const Text('OK'),
                                 ),
@@ -148,15 +154,21 @@ class MetodosDePagoScreen extends StatelessWidget {
                                   Text('Debe realizar el pago previo servicio'),
                               actions: <Widget>[
                                 TextButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     reserva.pago = "Efectivo";
                                     if (reservaServices.desdePeluquero)
                                       reserva.telefonica = true;
-                                    reservaServices
-                                        .guardarOCrearUsuario(reserva);
                                     reservaServices.desdePeluquero = false;
-                                    Navigator.pushNamed(
-                                        context, 'pantallaIntermedia');
+                                    reservaServices
+                                        .guardarOCrearReserva(reserva);
+                                    /*if (await reservaServices
+                                        .guardarOCrearReserva(reserva)) {
+                                      Navigator.pushNamed(context, 'recargaReservas');
+                                    }*/
+                                    await reservaServices.reloadReserva();
+                                    Navigator.pushNamed(context, 'home');
+                                    /*Navigator.pushNamed(
+                                        context, 'recargaReservas');*/
                                     //seleccionado = true;
                                   },
                                   child: const Text('OK'),
