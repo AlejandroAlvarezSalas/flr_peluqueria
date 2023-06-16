@@ -53,6 +53,7 @@ class ServiciosServices extends ChangeNotifier {
     });
 
     isReloading = false;
+    notifyListeners();
   }
 
   updateServiciosSeleccionados(bool value, Servicio servicio) {

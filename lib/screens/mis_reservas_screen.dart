@@ -183,10 +183,10 @@ class _MisReservasScreenState extends State<MisReservasScreen>
                   usuariosServices.usuarioLogin!.saldo =
                       usuariosServices.usuarioLogin!.saldo ??
                           0 + sumaPrecios as double;
-                  usuariosServices
-                      .updateUsuario(usuariosServices.usuarioLogin!);
+                  await usuariosServices
+                      .guardarOCrearUsuario(usuariosServices.usuarioLogin!);
                 }
-                reservaServices.cancelarReserva(reserva);
+                await reservaServices.cancelarReserva(reserva);
                 await reservaServices.reloadReserva();
                 Navigator.pushNamed(context, 'home');
                 //seleccionado = true;

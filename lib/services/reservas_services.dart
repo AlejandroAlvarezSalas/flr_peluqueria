@@ -81,6 +81,7 @@ class ReservaServices extends ChangeNotifier {
       reservas.add(tempReserva);
     });
     isReloading = false;
+    notifyListeners();
   }
 
   Future create(Reserva reserva) async {

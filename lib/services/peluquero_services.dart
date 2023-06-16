@@ -48,6 +48,7 @@ class PeluquerosServices extends ChangeNotifier {
     });
 
     isReloading = false;
+    notifyListeners();
   }
 
   Future crearPeluquero(Peluquero peluquero) async {

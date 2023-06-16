@@ -95,7 +95,7 @@ class MetodosDePagoScreen extends StatelessWidget {
                                     if (reservaServices.desdePeluquero)
                                       reserva.telefonica = true;
                                     reservaServices.desdePeluquero = false;
-                                    reservaServices
+                                    await reservaServices
                                         .guardarOCrearReserva(reserva);
                                     /*if (await reservaServices
                                         .guardarOCrearReserva(reserva)) {
@@ -159,7 +159,7 @@ class MetodosDePagoScreen extends StatelessWidget {
                                     if (reservaServices.desdePeluquero)
                                       reserva.telefonica = true;
                                     reservaServices.desdePeluquero = false;
-                                    reservaServices
+                                    await reservaServices
                                         .guardarOCrearReserva(reserva);
                                     /*if (await reservaServices
                                         .guardarOCrearReserva(reserva)) {

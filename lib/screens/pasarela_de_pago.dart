@@ -111,7 +111,7 @@ class PasarelaDePagoScreen extends StatelessWidget {
                   reserva.pago = "Tarjeta";
                   if (reservaServices.desdePeluquero) reserva.telefonica = true;
                   reservaServices.desdePeluquero = false;
-                  reservaServices.guardarOCrearReserva(reserva);
+                  await reservaServices.guardarOCrearReserva(reserva);
                   /*if (reservaServices
                       .guardarOCrearReserva(reserva)) {
                     Navigator.pushNamed(context, 'recargaReservas');

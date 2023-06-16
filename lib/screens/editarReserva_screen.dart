@@ -88,7 +88,7 @@ class EditarReservaScreen extends StatelessWidget {
               title: Text('Cambiar estado del pago'),
               trailing: Icon(Icons.arrow_forward),
               onTap: () async {
-                reservaServices.alternarPagadaReserva(
+                await reservaServices.alternarPagadaReserva(
                     reservaServices.reservaSeleccionada!);
                 await reservaServices.reloadReserva();
                 Navigator.pushNamed(context, 'home');
@@ -97,7 +97,7 @@ class EditarReservaScreen extends StatelessWidget {
             title: Text('Cancelar cita'),
             trailing: Icon(Icons.arrow_forward),
             onTap: () async {
-              reservaServices
+              await reservaServices
                   .cancelarReserva(reservaServices.reservaSeleccionada!);
               await reservaServices.reloadReserva();
               Navigator.pushNamed(context, 'home');
