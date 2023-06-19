@@ -63,10 +63,48 @@ class _HorarioScreenState extends State<HorarioScreen> {
 
   List<DateTime> fechaSeleccionadas = [];
 
+  reiniciarColores() {
+    _colorboton1000 = Colors.white;
+    _colorboton1030 = Colors.white;
+    _colorboton1100 = Colors.white;
+    _colorboton1130 = Colors.white;
+    _colorboton1200 = Colors.white;
+    _colorboton1230 = Colors.white;
+    _colorboton1300 = Colors.white;
+    _colorboton1330 = Colors.white;
+    _colorboton1700 = Colors.white;
+    _colorboton1730 = Colors.white;
+    _colorboton1800 = Colors.white;
+    _colorboton1830 = Colors.white;
+    _colorboton1900 = Colors.white;
+    _colorboton1930 = Colors.white;
+    _colorboton2000 = Colors.white;
+    _colorboton2030 = Colors.white;
+
+    _colortexto1000 = Colors.black;
+    _colortexto1030 = Colors.black;
+    _colortexto1100 = Colors.black;
+    _colortexto1130 = Colors.black;
+    _colortexto1200 = Colors.black;
+    _colortexto1230 = Colors.black;
+    _colortexto1300 = Colors.black;
+    _colortexto1330 = Colors.black;
+    _colortexto1700 = Colors.black;
+    _colortexto1730 = Colors.black;
+    _colortexto1800 = Colors.black;
+    _colortexto1830 = Colors.black;
+    _colortexto1900 = Colors.black;
+    _colortexto1930 = Colors.black;
+    _colortexto2000 = Colors.black;
+    _colortexto2030 = Colors.black;
+  }
+
   void _onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
       selected = day;
     });
+    reiniciarColores();
+    fechaSeleccionadas.clear();
   }
 
   @override
@@ -141,42 +179,6 @@ class _HorarioScreenState extends State<HorarioScreen> {
           }
         }
       }
-    }
-
-    reiniciarColores() {
-      _colorboton1000 = Colors.white;
-      _colorboton1030 = Colors.white;
-      _colorboton1100 = Colors.white;
-      _colorboton1130 = Colors.white;
-      _colorboton1200 = Colors.white;
-      _colorboton1230 = Colors.white;
-      _colorboton1300 = Colors.white;
-      _colorboton1330 = Colors.white;
-      _colorboton1700 = Colors.white;
-      _colorboton1730 = Colors.white;
-      _colorboton1800 = Colors.white;
-      _colorboton1830 = Colors.white;
-      _colorboton1900 = Colors.white;
-      _colorboton1930 = Colors.white;
-      _colorboton2000 = Colors.white;
-      _colorboton2030 = Colors.white;
-
-      _colortexto1000 = Colors.black;
-      _colortexto1030 = Colors.black;
-      _colortexto1100 = Colors.black;
-      _colortexto1130 = Colors.black;
-      _colortexto1200 = Colors.black;
-      _colortexto1230 = Colors.black;
-      _colortexto1300 = Colors.black;
-      _colortexto1330 = Colors.black;
-      _colortexto1700 = Colors.black;
-      _colortexto1730 = Colors.black;
-      _colortexto1800 = Colors.black;
-      _colortexto1830 = Colors.black;
-      _colortexto1900 = Colors.black;
-      _colortexto1930 = Colors.black;
-      _colortexto2000 = Colors.black;
-      _colortexto2030 = Colors.black;
     }
 
     /*cambiarColores(Color fondo, Color texto) {
@@ -1185,6 +1187,8 @@ class _HorarioScreenState extends State<HorarioScreen> {
                 onPressed: (fechaSeleccionadas
                             .isEmpty || //compruebo los casos excluyentes, si alguno es true no me valen las fechas
                         fechaSeleccionadas.length != calcularHoras() ||
+                        fechaSeleccionadas.first.isBefore(
+                            now) || //compruebo si la primera hora ya ha pasado
                         !verificarSeparacion() ||
                         _fechaOcupada)
                     ? null
